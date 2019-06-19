@@ -3,12 +3,28 @@
 
 # 0 loop_fix branch
 
- # 1 - Import library
+# 1 - Import library
 import pygame
 from pygame.locals import *
 import math
 import random
  
+ 
+# User can be presented 
+# with three options: 
+# easy, medium, and hard at start. 
+# Parameters like 
+# time, arrow count, etc. 
+# can be set 
+# according to the difficulty selected. 
+config_options = {
+    'difficulty': {
+        'easy': {}, 
+        # default
+        'medium': {}, 
+        'hard': {}
+    }
+}
 # 2 - Initialize the game
 pygame.init()
 width, height = 640, 480
@@ -28,14 +44,14 @@ gameover = pygame.image.load("resources/images/gameover.png")
 youwin = pygame.image.load("resources/images/youwin.png")
 
 # 3.1 - Load audio
-#hit = pygame.mixer.Sound("resources/audio/explode.wav")
-#enemy = pygame.mixer.Sound("resources/audio/enemy.wav")
-#shoot = pygame.mixer.Sound("resources/audio/shoot.wav")
-#hit.set_volume(0.05)
-#enemy.set_volume(0.05)
-#shoot.set_volume(0.05)
-#pygame.mixer.music.load('resources/audio/moonlight.wav')
-#pygame.mixer.music.set_volume(0.25)
+hit = pygame.mixer.Sound("resources/audio/explode.wav")
+enemy = pygame.mixer.Sound("resources/audio/enemy.wav")
+shoot = pygame.mixer.Sound("resources/audio/shoot.wav")
+hit.set_volume(0.05)
+enemy.set_volume(0.05)
+shoot.set_volume(0.05)
+pygame.mixer.music.load('resources/audio/moonlight.wav')
+pygame.mixer.music.set_volume(0.25)
 
  
 # 4 - keep looping through
