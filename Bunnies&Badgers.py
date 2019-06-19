@@ -80,10 +80,8 @@ def main():
         for x in range(width/grass.get_width()+1):
             for y in range(height/grass.get_height()+1):
                 screen.blit(grass,(x*100,y*100))
-        screen.blit(castle,(0,30))
-        screen.blit(castle,(0,135))
-        screen.blit(castle,(0,240))
-        screen.blit(castle,(0,345 ))
+        for y in ( 30, 135, 240, 345 ):
+            screen.blit( castle, ( 0, y ) )
         # 6.1 - Set player position and rotation
         position = pygame.mouse.get_pos()
         angle = math.atan2(
