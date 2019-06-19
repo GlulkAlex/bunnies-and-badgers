@@ -17,16 +17,26 @@ import random
 # time, arrow count, etc. 
 # can be set 
 # according to the difficulty selected. 
-config_options = {
-    'difficulty': {
-        'easy': {}, 
-        # default
-        'medium': { 'num_arrows': 100, 'healthvalue': 194 }, 
-        'hard': {}
+def set_difficulty(
+    selected,
+    config_options = {
+        'difficulty': {
+            'easy': { 'num_arrows': 300, 'healthvalue': 400 }, 
+            # default
+            'medium': { 'num_arrows': 100, 'healthvalue': 194 }, 
+            'hard': { 'num_arrows': 50, 'healthvalue': 94 }
+        }
     }
-}
+):
+    """ helper
+    """ 
+    for key, value in config_options['difficulty'][selected].items():
+        globals()[key] = value
+    
 ### @toDo: Add start game choose difficulty screen
-def show_difficulty_options( width, height, screen ):
+def show_difficulty_options( 
+    width, height, screen 
+):
     """ helper
 # pygame.display.update(a rectangle or some list of rectangles)
 # -- This updates just the rectangular areas of the screen you specify.
@@ -44,8 +54,9 @@ def show_difficulty_options( width, height, screen ):
     screen.fill(0)
     screen.blit( rendered_text, text_box )
     # return
-    #?pygame.display.update( )#text_box )
-    pygame.display.flip()
+    #?
+    pygame.display.update( text_box )
+    #>pygame.display.flip()
     #?
     pygame.time.delay(1500)
     
