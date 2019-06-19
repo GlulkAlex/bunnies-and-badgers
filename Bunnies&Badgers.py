@@ -21,7 +21,7 @@ config_options = {
     'difficulty': {
         'easy': {}, 
         # default
-        'medium': {}, 
+        'medium': { 'num_arrows': 100, 'healthvalue': 194 }, 
         'hard': {}
     }
 }
@@ -57,7 +57,9 @@ pygame.mixer.music.set_volume(0.25)
 # 4 - keep looping through
 def main():
     keys = [False, False, False, False]
-    playerpos=[100,100]
+    playerpos=[
+        100,height // 2#100
+    ]
     acc=[0,0]
     arrows=[]
     badtimer=100
@@ -97,7 +99,12 @@ def main():
             vely=math.sin(bullet[0])*10
             bullet[1]+=velx
             bullet[2]+=vely
-            if bullet[1]<-64 or bullet[1]>640 or bullet[2]<-64 or bullet[2]>480:
+            if( 
+                bullet[1]<-64 
+                or bullet[1]>640 
+                or bullet[2]<-64 
+                or bullet[2]>480
+            ):
                 arrows.remove(bullet)
                 if num_arrows <= 0:
                     running = 0
@@ -105,7 +112,7 @@ def main():
             arrow1 = pygame.transform.rotate(arrow, 360-projectile[0]*57.29)
             screen.blit(arrow1, (projectile[1], projectile[2]))
         
-       # 6.3 - Draw badgers
+        # 6.3 - Draw badgers
         if badtimer==0:
             badguys.append([640, random.randint(50,430)])
             badtimer=100-(badtimer1*2)
@@ -135,7 +142,7 @@ def main():
                     acc[0]+=1
                     badguys.remove(badguy)
                     arrows.remove(bullet)
-            # 6.3.3 - Next bad guy
+        # 6.3.3 - Next bad guy
         for badguy in badguys:
             screen.blit(badguyimg, badguy)
         # 6.4 - Draw clock
@@ -208,7 +215,7 @@ def main():
             playerpos[0]+=5
         #10 - Win/Lose check
         timenow = pygame.time.get_ticks()
-        if timenow - timestart >=90000:
+        if timenow - timestart >= 90000:
             running=0
             exitcode=1
         if healthvalue<=0:
@@ -247,15 +254,16 @@ def main():
     # draw replay/exit buttons
     global textx, texty, textx_size, texty_size
     global text2x, text2y, text2x_size, text2y_size
+    
     bigfont = pygame.font.Font(None, 80)
     text = bigfont.render('Play Again', 13, (0, 255, 0))
     textx = width / 2 - text.get_width() / 2
     texty = height / 4 - text.get_height() / 2
     textx_size = text.get_width()
     texty_size = text.get_height()
-    pygame.draw.rect(screen, (0, 255, 255), ((textx - 5, texty - 5),
-                                               (textx_size + 10, texty_size +
-                                                10)))
+    pygame.draw.rect(
+        screen, (0, 255, 255), 
+        ((textx - 5, texty - 5), (textx_size + 10, texty_size + 10)))
 
     screen.blit(text, (width / 2 - text.get_width() / 2,
                        height / 4 - text.get_height() / 2))
@@ -264,13 +272,14 @@ def main():
     text2y = height * 3 / 4 - text2.get_height() / 2
     text2x_size = text2.get_width()
     text2y_size = text2.get_height()
-    pygame.draw.rect(screen, (0, 255, 255), ((text2x - 5, text2y - 5),
-                                               (text2x_size + 10, text2y_size +
-                                                10)))
+    pygame.draw.rect(
+        screen, (0, 255, 255), 
+        ((text2x - 5, text2y - 5), (text2x_size + 10, text2y_size + 10)))
 
-    screen.blit(text2, (width / 2 - text2.get_width() / 2,
-                       height * 3 / 4 - text2.get_height() / 2))
-
+    screen.blit(
+        text2, 
+        (width / 2 - text2.get_width() / 2,
+        height * 3 / 4 - text2.get_height() / 2))
 
     pygame.display.flip()
 
