@@ -25,6 +25,31 @@ config_options = {
         'hard': {}
     }
 }
+### @toDo: Add start game choose difficulty screen
+def show_difficulty_options( width, height, screen ):
+    """ helper
+# pygame.display.update(a rectangle or some list of rectangles)
+# -- This updates just the rectangular areas of the screen you specify.
+    """
+    #?pygame.font.init()
+    font_24 = pygame.font.Font( None, 24 )
+    # (0,0,255) for blue
+    # render(text, antialias, color, background=None) -> Surface
+    rendered_text = font_24.render(
+        "options:", 
+        True, (255,0,0), (0,0,255)
+    )
+    text_box = rendered_text.get_rect()
+    text_box.topright = [ width // 2, height * 0.5 ]
+    screen.fill(0)
+    screen.blit( rendered_text, text_box )
+    # return
+    #?pygame.display.update( )#text_box )
+    pygame.display.flip()
+    #?
+    pygame.time.delay(1500)
+    
+
 # 2 - Initialize the game
 pygame.init()
 width, height = 640, 480
@@ -69,7 +94,9 @@ def main():
     timestart = pygame.time.get_ticks()
     #pygame.mixer.music.play(-1, 0.0)
     num_arrows = 100
-
+    
+    show_difficulty_options( width, height, screen )
+    
     running = 1
     exitcode = 0
     while running:
@@ -115,7 +142,7 @@ def main():
             badguys.append([640, random.randint(50,430)])
             badtimer=100-(badtimer1*2)
             if badtimer1>=35:
-                badtimer1=35
+                badtimer1=3#35
             else:
                 badtimer1+=5
         for badguy in list(badguys):
@@ -235,11 +262,11 @@ def main():
         "Score: "+str(accuracy)+
         "% (Accuracy) * "+str(elapsedtime/1000)+
         " (Time) = "+str(int(accuracy*elapsedtime/1000)) )
-    text = font.render(game_over_message, True, (0, 255, 0))
+    text = font.render( game_over_message, True, (0, 255, 0) )
 
     textRect = text.get_rect()
     textRect.centerx = screen.get_rect().centerx
-    textRect.centery = screen.get_rect().centery+24
+    textRect.centery = screen.get_rect().centery + 24
     if exitcode==0:
         screen.blit(gameover, (0,0))
     else:
