@@ -1,3 +1,6 @@
+#!/usr/bin/env python2.7
+# -*- coding: utf-8 -*-
+
 # 0 loop_fix branch
 
  # 1 - Import library
@@ -25,14 +28,14 @@ gameover = pygame.image.load("resources/images/gameover.png")
 youwin = pygame.image.load("resources/images/youwin.png")
 
 # 3.1 - Load audio
-hit = pygame.mixer.Sound("resources/audio/explode.wav")
-enemy = pygame.mixer.Sound("resources/audio/enemy.wav")
-shoot = pygame.mixer.Sound("resources/audio/shoot.wav")
-hit.set_volume(0.05)
-enemy.set_volume(0.05)
-shoot.set_volume(0.05)
-pygame.mixer.music.load('resources/audio/moonlight.wav')
-pygame.mixer.music.set_volume(0.25)
+#hit = pygame.mixer.Sound("resources/audio/explode.wav")
+#enemy = pygame.mixer.Sound("resources/audio/enemy.wav")
+#shoot = pygame.mixer.Sound("resources/audio/shoot.wav")
+#hit.set_volume(0.05)
+#enemy.set_volume(0.05)
+#shoot.set_volume(0.05)
+#pygame.mixer.music.load('resources/audio/moonlight.wav')
+#pygame.mixer.music.set_volume(0.25)
 
  
 # 4 - keep looping through
@@ -46,7 +49,7 @@ def main():
     badguys=[[640,100]]
     healthvalue=194
     timestart = pygame.time.get_ticks()
-    pygame.mixer.music.play(-1, 0.0)
+    #pygame.mixer.music.play(-1, 0.0)
     num_arrows = 100
 
     running = 1
@@ -65,9 +68,12 @@ def main():
         screen.blit(castle,(0,345 ))
         # 6.1 - Set player position and rotation
         position = pygame.mouse.get_pos()
-        angle = math.atan2(position[1]-(playerpos[1]+32),position[0]-(playerpos[0]+26))
+        angle = math.atan2(
+            position[1]-(playerpos[1]+32),position[0]-(playerpos[0]+26))
         playerrot = pygame.transform.rotate(player, 360-angle*57.29)
-        playerpos1 = (playerpos[0]-playerrot.get_rect().width/2, playerpos[1]-playerrot.get_rect().height/2)
+        playerpos1 = (
+            playerpos[0]-playerrot.get_rect().width/2, 
+            playerpos[1]-playerrot.get_rect().height/2)
         screen.blit(playerrot, playerpos1)
         # 6.2 - Draw arrows
         for bullet in list(arrows):
@@ -100,7 +106,7 @@ def main():
             badrect.top=badguy[1]
             badrect.left=badguy[0]
             if badrect.left<64:
-                hit.play()
+                #hit.play()
                 healthvalue -= random.randint(5,20)
                 badguys.remove(badguy)
             #6.3.2 - Check for collisions
@@ -109,7 +115,7 @@ def main():
                 bullrect.left=bullet[1]
                 bullrect.top=bullet[2]
                 if badrect.colliderect(bullrect):
-                    enemy.play()
+                    #enemy.play()
                     acc[0]+=1
                     badguys.remove(badguy)
                     arrows.remove(bullet)
@@ -119,11 +125,18 @@ def main():
         # 6.4 - Draw clock
         font = pygame.font.Font(None, 24)
         time_remaining = 90000 - (pygame.time.get_ticks() - timestart)
-        survivedtext = font.render(str((time_remaining / 60000))+":"+str(time_remaining/1000%60).zfill(2), True, (0,0,0))
+        survivedtext = font.render(
+            str(
+                (time_remaining / 60000))+":"+
+            str(
+                time_remaining/1000%60).zfill(2), 
+            True, (0,0,0)
+        )
         textRect = survivedtext.get_rect()
         textRect.topright=[635,5]
         screen.blit(survivedtext, textRect)
-        arrowstext = font.render("Remaining arrows: " + str(num_arrows), True, (0,0,0))
+        arrowstext = font.render(
+            "Remaining arrows: " + str(num_arrows), True, (0,0,0))
         arrowsTextRect = arrowstext.get_rect()
         arrowsTextRect.topright = [635, 20]
         screen.blit(arrowstext, arrowsTextRect)
@@ -159,10 +172,14 @@ def main():
                 elif event.key==pygame.K_d:
                     keys[3]=False
             if event.type==pygame.MOUSEBUTTONDOWN:
-                shoot.play()
+                #shoot.play()
                 position=pygame.mouse.get_pos()
                 acc[1]+=1
-                arrows.append([math.atan2(position[1]-(playerpos1[1]+32),position[0]-(playerpos1[0]+26)),playerpos1[0]+32,playerpos1[1]+32])
+                arrows.append(
+                    [math.atan2(position[1]-(playerpos1[1]+32),
+                                position[0]-(playerpos1[0]+26)),
+                    playerpos1[0]+32,
+                    playerpos1[1]+32])
                 num_arrows -= 1
         # 9 - Move player
         if keys[0]:
@@ -185,7 +202,7 @@ def main():
             accuracy=round(acc[0]*1.0/acc[1]*100,2)
         else:
             accuracy=0
-    # 11 - Win/lose display        
+    # 11 - Win/lose display
     pygame.font.init()
     font = pygame.font.Font(None, 24)
     elapsedtime = pygame.time.get_ticks()-timestart/1000
@@ -193,7 +210,10 @@ def main():
     game_over_message = ""
     if num_arrows <= 0:
         game_over_message = "You have run out of arrows!!! "
-    game_over_message += "Score: "+str(accuracy)+"% (Accuracy) * "+str(elapsedtime/1000)+" (Time) = "+str(int(accuracy*elapsedtime/1000))
+    game_over_message += (
+        "Score: "+str(accuracy)+
+        "% (Accuracy) * "+str(elapsedtime/1000)+
+        " (Time) = "+str(int(accuracy*elapsedtime/1000)) )
     text = font.render(game_over_message, True, (0, 255, 0))
 
     textRect = text.get_rect()
@@ -205,7 +225,7 @@ def main():
         screen.blit(youwin, (0,0))
     screen.blit(text, textRect)
     pygame.display.flip()
-    pygame.mixer.music.fadeout(1500)
+    #pygame.mixer.music.fadeout(1500)
     pygame.time.delay(1500)
 
     # draw replay/exit buttons
@@ -255,4 +275,3 @@ while 1:
                 if y >= text2y - 5 and y <= text2y + text2y_size + 5:
                     pygame.quit()
                     exit(0)
-        
