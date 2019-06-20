@@ -18,7 +18,9 @@ import random
 # can be set 
 # according to the difficulty selected. 
 def set_difficulty(
+    # mandatory ? positional ?
     selected,
+    # optional default
     config_options = {
         'difficulty': {
             'easy': { 'num_arrows': 300, 'healthvalue': 400, 'enemy_Speed': 1 }, 
@@ -28,17 +30,23 @@ def set_difficulty(
         },
         # On / Off
         'is_Sound_Enabled': False,
-    }
+    },
+    *pos_args, **key_args
 ):
     """ helper
     """ 
-    options = vars#locals#globals
-    print "Game difficulty was {}".format( options().get( 'difficulty' ) )
-    print "Setting game difficulty to {}".format( selected )
-    options()['difficulty'] = selected
-    for key, value in config_options['difficulty'][selected].items():
-        print "setting {} to {}".format( key, value )
-        options()[key] = value
+    if key_args is not None:
+        
+        options = key_args#() = vars#locals#globals
+        print "Game difficulty was {}".format( options.get( 'difficulty' ) )
+        print "Setting game difficulty to {}".format( selected )
+        options['difficulty'] = selected
+        
+        for key, value in config_options['difficulty'][selected].items():
+            print "setting {} to {}".format( key, value )
+            options[key] = value
+    
+    return selected#?, key_args
     
 ### @toDo: Add start game choose difficulty screen
 def show_difficulty_options( 
@@ -87,9 +95,42 @@ def show_difficulty_options(
             #top = 
             height // 10, 
             #width = 
-            int( width * 0.5 ), 
+            int( width * 0.8 ), 
             #height = 
-            int( height * 0.5 ) ) )
+            int( height * 0.8 ) ) )
+    
+    #for option in ( 'easy', 'medium', 'hard' ):
+    #    pass
+    
+    #Rect.copy()
+    #copy the rectangle
+    #copy() -> Rect
+    #Returns a new rectangle 
+    #having the same position and size as the original.
+    #Rect.move()
+    #moves the rectangle
+    #move(x, y) -> Rect
+    #Returns a new rectangle 
+    #that is moved by the given offset. 
+    #The x and y arguments can be any integer value, positive or negative.
+    option_Box_1 = screen.fill( 
+        color = Color("green"), 
+        rect = Rect( 
+            #left = 
+            width // 20, 
+            #top = 
+            height // 20, 
+            #width = 
+            int( width * 0.1 ), 
+            #height = 
+            int( height * 0.1 ) ) )
+    y_OffSet = height // 10
+    #option_Box_1.left: 32
+    #print "option_Box_1.left:", option_Box_1.left
+    #option_Box_1.bottomleft: (32, 72)
+    #print "option_Box_1.bottomleft:", option_Box_1.bottomleft
+    option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
+    option_Box_3 = option_Box_2.move( option_Box_2.left, option_Box_2.bottom + y_OffSet )
     
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
@@ -208,7 +249,10 @@ def main():
     player_Speed = 5
     enemy_Speed = 5#7
     
-    set_difficulty( show_difficulty_options( width, height, screen ) )
+    set_difficulty( 
+        show_difficulty_options( width, height, screen ),
+        **{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
+    )
     print "Game difficulty is {}".format(difficulty)
     
     running = 1
