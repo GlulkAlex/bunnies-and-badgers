@@ -256,6 +256,18 @@ def show_difficulty_options(
     text_box.center = exit_Button_Box.center
     screen.blit( rendered_text, text_box )
     
+    start_Button_Box = exit_Button_Box.copy()#move( y_OffSet, 0 )
+    #?start_Button_Box.topright = ( option_Box_3.right, start_Button_Box.bottom )
+    start_Button_Box.right = option_Box_3.right
+    screen.fill( color = Color("green"), rect = start_Button_Box )
+    rendered_text = font_24.render(
+        "Start", 
+        True, Color("white"), Color( "black" )
+    )
+    text_box = rendered_text.get_rect()
+    text_box.center = start_Button_Box.center
+    screen.blit( rendered_text, text_box )
+    
     # return
     #pygame.display.update( text_box )
     #
