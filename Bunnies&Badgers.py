@@ -50,7 +50,12 @@ def set_difficulty(
             #print "setting {} to {}".format( key, value )
             #options[key] = value
     
-    return Game_Options( selected, **config_options['difficulty'][selected] )#?, key_args
+    #>return Game_Options( selected, **config_options['difficulty'][selected] )#?, key_args
+    return ( lambda difficulty, num_arrows, healthvalue, enemy_Speed, **rest: ( 
+        difficulty, num_arrows, healthvalue, enemy_Speed, rest ) 
+    )(
+        difficulty = selected, 
+        **config_options['difficulty'][selected] )
     
 ### @toDo: Add start game choose difficulty screen
 def show_difficulty_options( 
@@ -254,7 +259,7 @@ def main():
     enemy_Speed = 5#7
     
     (
-        difficulty, num_arrows, healthvalue, enemy_Speed
+        difficulty, num_arrows, healthvalue, enemy_Speed, _
     ) = set_difficulty( 
         show_difficulty_options( width, height, screen ),
         #**{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
