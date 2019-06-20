@@ -137,9 +137,7 @@ def show_difficulty_options(
     # Returns a new rectangle 
     # that is moved by the given offset. 
     # The x and y arguments can be any integer value, positive or negative.
-    option_Box_1 = screen.fill( 
-        color = Color("green"), 
-        rect = Rect( 
+    option_Box_1 = Rect( 
             #left = 
             #?width // 20, 
             80,
@@ -152,7 +150,10 @@ def show_difficulty_options(
             #height = 
             #?int( height * 0.1 ) 
             option_Box_Height
-            ) )
+            )
+    screen.fill( 
+        color = Color("green"), 
+        rect = option_Box_1 )
     y_OffSet = option_Box_Height + 10#?height // 10
     #option_Box_1.left: 32
     #print "option_Box_1.left:", option_Box_1.left
@@ -175,18 +176,27 @@ def show_difficulty_options(
             True, Color("black"), Color( "white" )
         ), 
         options_Box )
+    rendered_text = font_24.render(
+        "easy", 
+        True, Color("yellow"), Color( "black" )
+    )
+    text_box = rendered_text.get_rect()
+    text_box.center = option_Box_1.center
     screen.blit( 
-        font_24.render(
-            "easy", 
-            True, Color("yellow"), Color( "black" )
-        ), 
-        option_Box_1 )
+        rendered_text, 
+        #option_Box_1 
+        text_box
+    )
+    rendered_text = font_24.render(
+        "medium", 
+        True, Color("blue"), Color( "magenta" )
+    )
     screen.blit( 
-        font_24.render(
-            "medium", 
-            True, Color("blue"), Color( "magenta" )
-        ), 
-        option_Box_2 )
+        rendered_text, 
+        #rendered_text.get_rect().clamp( option_Box_2 ) 
+        #?option_Box_2.clamp( rendered_text.get_rect() )
+        option_Box_2.center# = (20,30)
+    )
     screen.blit( 
         font_24.render(
             "hard", 
@@ -196,12 +206,14 @@ def show_difficulty_options(
     # (0,0,255) for blue
     # render(text, antialias, color, background=None) -> Surface
     rendered_text = font_24.render(
-        "options:", 
-        True, ( 255, 0, 0 ), ( 0, 0, 255 )
+        "Audio options:", 
+        True, Color("blue"), Color( "yellow" )
     )
-    text_box = rendered_text.get_rect()
-    text_box.topright = [ width // 2, height * 0.5 ]
+    #text_box = rendered_text.get_rect()
+    #text_box.topright = [ width // 2, height * 0.5 ]
+    
     #?screen.fill(0)
+    
     # Surface.blit()
     # draw one image onto another
     # Surface.blit(source, dest, area=None, special_flags = 0) -> Rect
@@ -218,7 +230,7 @@ def show_difficulty_options(
     # An optional `area` rectangle can be passed as well. 
     # This represents 
     # a smaller portion of the source Surface to draw.
-    screen.blit( rendered_text, text_box )
+    screen.blit( rendered_text, ( option_Box_3.left, option_Box_3.bottom + 10 ) )#text_box )
     # return
     #pygame.display.update( text_box )
     #
