@@ -21,10 +21,10 @@ def set_difficulty(
     selected,
     config_options = {
         'difficulty': {
-            'easy': { 'num_arrows': 300, 'healthvalue': 400, }, 
+            'easy': { 'num_arrows': 300, 'healthvalue': 400, 'enemy_Speed': 1 }, 
             # default
-            'medium': { 'num_arrows': 100, 'healthvalue': 194, }, 
-            'hard': { 'num_arrows': 50, 'healthvalue': 94, }
+            'medium': { 'num_arrows': 100, 'healthvalue': 194, 'enemy_Speed': 7 }, 
+            'hard': { 'num_arrows': 50, 'healthvalue': 94, 'enemy_Speed': 10 }
         },
         # On / Off
         'is_Sound_Enabled': False,
@@ -98,21 +98,26 @@ def main():
     playerpos = [
         100, height // 2#100
     ]
+    # shoots vs. hits
     acc = [ 0, 0 ]
     arrows = []
     badtimer = 100
     badtimer1 = 0
-    badguys =[ [ width, 100 ] ]
+    badguys = [ [ width, 100 ] ]
     healthvalue = 194
     timestart = pygame.time.get_ticks()
+    
     is_Sound_Enabled = False
     if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     num_arrows = 100
+    
     arrow_Height = 32
     arrow_Width = 26
     # towers spawn positions
     #castles_Ys = ( 30, 135, 240, 345 )
     castles_Ys = range( 30, height - 30, 105 )
+    player_Speed = 5
+    enemy_Speed = 5#7
     
     show_difficulty_options( width, height, screen )
     
@@ -125,6 +130,7 @@ def main():
         # 6 - draw the screen elements
         for x in range( width / grass.get_width() + 1 ):
             for y in range( height / grass.get_height() + 1 ):
+                ### @toDo: replace magic number 100 with named constant
                 screen.blit( grass, ( x * 100, y * 100 ) )
         
         for y in castles_Ys:
@@ -134,6 +140,7 @@ def main():
         angle = math.atan2(
             position[1] - ( playerpos[1] + arrow_Height ),
             position[0] - ( playerpos[0] + arrow_Width ) )
+        ### @toDo: replace magic numbers 360 and 57.29 with named constants
         playerrot = pygame.transform.rotate( player, 360 - angle * 57.29 )
         playerpos1 = (
             playerpos[0] - playerrot.get_rect().width / 2, 
@@ -141,10 +148,12 @@ def main():
         screen.blit( playerrot, playerpos1 )
         # 6.2 - Draw arrows
         for bullet in list(arrows):
+            ### @toDo: replace magic number 10 with named constant
             velx = math.cos( bullet[0] ) * 10
             vely = math.sin( bullet[0] ) * 10
             bullet[1] += velx
             bullet[2] += vely
+            ### @toDo: replace magic number +/-64 with named constant
             if( 
                 bullet[1]    < -64 
                 or bullet[1] > width 
@@ -162,6 +171,7 @@ def main():
         if badtimer == 0:
             badguys.append( [ width, random.randint( 50, 430 ) ] )
             badtimer = 100 - ( badtimer1 * 2 )
+            ### @toDo: replace magic number 35 with named constant
             if badtimer1 >= 35:
                 badtimer1 = 35
             else:
@@ -169,7 +179,7 @@ def main():
         for badguy in list( badguys ):
             if badguy[0] < -64:
                 badguys.remove( badguy )
-            badguy[0] -= 7
+            badguy[0] -= enemy_Speed#7
             # 6.3.1 - Attack castle
             badrect = pygame.Rect( badguyimg.get_rect() )
             badrect.top = badguy[1]
@@ -198,6 +208,7 @@ def main():
             screen.blit( badguyimg, badguy )
         # 6.4 - Draw clock
         font = pygame.font.Font( None, 24 )
+        ### @toDo: replace magic number 90000 with named constant
         time_remaining = 90000 - ( pygame.time.get_ticks() - timestart )
         survivedtext = font.render(
             str( time_remaining / 60000 ) + ":" + 
@@ -258,80 +269,87 @@ def main():
                 num_arrows -= 1
         # 9 - Move player
         if keys[0]:
-            playerpos[1]-=5
+            playerpos[1] -= player_Speed#5
         elif keys[2]:
-            playerpos[1]+=5
+            playerpos[1] += player_Speed#5
         if keys[1]:
-            playerpos[0]-=5
+            playerpos[0] -= player_Speed#5
         elif keys[3]:
-            playerpos[0]+=5
+            playerpos[0] += player_Speed#5
         #10 - Win/Lose check
         timenow = pygame.time.get_ticks()
         if timenow - timestart >= 90000:
-            running=0
-            exitcode=1
-        if healthvalue<=0:
-            running=0
-            exitcode=0
-        if acc[1]!=0:
-            accuracy=round(acc[0]*1.0/acc[1]*100,2)
+            # times up
+            running = 0
+            exitcode = 1
+        if healthvalue <= 0:
+            # nothing to protect
+            running = 0
+            exitcode = 0
+        if acc[1] != 0:
+            accuracy = round( acc[0] * 1.0 / acc[1] *100, 2 )
         else:
-            accuracy=0
+            # ?!?
+            accuracy = 0
     # 11 - Win/lose display
     pygame.font.init()
-    font = pygame.font.Font(None, 24)
-    elapsedtime = pygame.time.get_ticks()-timestart/1000
+    ### @toDo: not DRY
+    font = pygame.font.Font( None, 24 )
+    elapsedtime = pygame.time.get_ticks() - timestart / 1000
 
     game_over_message = ""
     if num_arrows <= 0:
         game_over_message = "You have run out of arrows!!! "
+    ### @toDo: it can be replaced with string format
     game_over_message += (
-        "Score: "+str(accuracy)+
-        "% (Accuracy) * "+str(elapsedtime/1000)+
-        " (Time) = "+str(int(accuracy*elapsedtime/1000)) )
-    text = font.render( game_over_message, True, (0, 255, 0) )
+        "Score: " + str( accuracy ) +
+        "% (Accuracy) * " + str( elapsedtime / 1000 )+
+        " (Time) = " + str( int( accuracy * elapsedtime / 1000 ) ) )
+    text = font.render( game_over_message, True, ( 0, 255, 0 ) )
 
     textRect = text.get_rect()
     textRect.centerx = screen.get_rect().centerx
     textRect.centery = screen.get_rect().centery + 24
-    if exitcode==0:
-        screen.blit(gameover, (0,0))
+    if exitcode == 0:
+        screen.blit( gameover, ( 0, 0 ))
     else:
-        screen.blit(youwin, (0,0))
-    screen.blit(text, textRect)
+        screen.blit( youwin, ( 0, 0 ) )
+    screen.blit( text, textRect )
     pygame.display.flip()
-    #pygame.mixer.music.fadeout(1500)
-    pygame.time.delay(1500)
+    pygame.mixer.music.fadeout( 1500 )
+    pygame.time.delay( 1500 )
 
     # draw replay/exit buttons
     global textx, texty, textx_size, texty_size
     global text2x, text2y, text2x_size, text2y_size
     
-    bigfont = pygame.font.Font(None, 80)
-    text = bigfont.render('Play Again', 13, (0, 255, 0))
+    bigfont = pygame.font.Font( None, 80 )
+    text = bigfont.render('Play Again', 13, ( 0, 255, 0 ) )
     textx = width / 2 - text.get_width() / 2
     texty = height / 4 - text.get_height() / 2
     textx_size = text.get_width()
     texty_size = text.get_height()
     pygame.draw.rect(
-        screen, (0, 255, 255), 
-        ((textx - 5, texty - 5), (textx_size + 10, texty_size + 10)))
+        screen, 
+        ( 0, 255, 255 ), 
+        ( ( textx - 5, texty - 5 ), ( textx_size + 10, texty_size + 10 ) ) )
 
-    screen.blit(text, (width / 2 - text.get_width() / 2,
-                       height / 4 - text.get_height() / 2))
-    text2 = bigfont.render('Exit', 13, (255, 0, 0))
+    screen.blit( 
+        text, 
+        ( width / 2 - text.get_width() / 2, height / 4 - text.get_height() / 2 ) )
+    text2 = bigfont.render('Exit', 13, ( 255, 0, 0 ) )
     text2x = width / 2 - text2.get_width() / 2
     text2y = height * 3 / 4 - text2.get_height() / 2
     text2x_size = text2.get_width()
     text2y_size = text2.get_height()
     pygame.draw.rect(
-        screen, (0, 255, 255), 
-        ((text2x - 5, text2y - 5), (text2x_size + 10, text2y_size + 10)))
+        screen, 
+        ( 0, 255, 255 ), 
+        ( ( text2x - 5, text2y - 5 ), ( text2x_size + 10, text2y_size + 10 ) ) )
 
     screen.blit(
         text2, 
-        (width / 2 - text2.get_width() / 2,
-        height * 3 / 4 - text2.get_height() / 2))
+        ( width / 2 - text2.get_width() / 2, height * 3 / 4 - text2.get_height() / 2 ) )
 
     pygame.display.flip()
 
