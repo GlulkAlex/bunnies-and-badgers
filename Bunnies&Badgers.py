@@ -89,6 +89,8 @@ def show_difficulty_options(
         *pygame.cursors.tri_left#>diamond#>arrow 
     )
     
+    selected_Difficulty = 'medium'
+    
     # Color(name) -> Color
     # Color(r, g, b, a) -> Color
     # Color(rgbvalue) -> Color
@@ -179,9 +181,19 @@ def show_difficulty_options(
     #?option_Box_2 = 
     screen.fill( color = Color("green"), rect = option_Box_2 )
     option_Box_3 = option_Box_2.move( 0, y_OffSet )
-    #?option_Box_3 = screen.fill( color = Color("green"), rect = option_Box_3 )
+    #?option_Box_3 = 
+    screen.fill( color = Color("green"), rect = option_Box_3 )
     # TypeError: rect() takes no keyword arguments
-    option_Box_3 = pygame.draw.rect( screen, Color("green"), option_Box_3, 10 )
+    #>option_Box_3 = pygame.draw.rect( screen, Color("green"), option_Box_3, 10 )
+    
+    def mark_Option( option_Box ):
+        """ helper """
+        #option_Box = 
+        pygame.draw.rect( screen, Color("gray"), option_Box, 10 )
+        # return 
+        pygame.display.update( option_Box )
+    
+    mark_Option( option_Box_2 )
     
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
@@ -342,12 +354,20 @@ def show_difficulty_options(
                 if exit_Button_Box.collidepoint( x, y ):
                     pygame.quit()
                     exit(0)
+                
+                if start_Button_Box.collidepoint( x, y ):
+                    # selected_Difficulty
+                    return collect_Config( 
+                        difficulty = selected_Difficulty,
+                        is_Sound_Enabled = is_Sound_Enabled,
+                        **difficulty[ selected_Difficulty ]
+                    )
                     
                 if is_Sound_Enabled_Box.collidepoint( x, y ):
                     ### @toDo: do flip / switch inside function ?
                     is_Sound_Enabled = not is_Sound_Enabled
                     toggle_Sound( font_24, is_Sound_Enabled, is_Sound_Enabled_Box )
-                    
+                
                 # selected option detection
                 # by x, y boundaries box / rectangle
                 # Rect.collidepoint()
@@ -362,30 +382,39 @@ def show_difficulty_options(
                     #selected = 'easy'
                     #?set_difficulty( selected )
                     # ? is_Sound_Enabled
+                    selected_Difficulty = 'easy'
+                    ### @toDo: toggle | make visible selection 
+                    mark_Option( option_Box_1 )
                     #return 'easy'
-                    return collect_Config( 
-                        difficulty = 'easy',
-                        is_Sound_Enabled = is_Sound_Enabled,
-                        **difficulty[ 'easy' ]
-                    )
+                    #return collect_Config( 
+                        #difficulty = 'easy',
+                        #is_Sound_Enabled = is_Sound_Enabled,
+                        #**difficulty[ 'easy' ]
+                    #)
                 
                 if option_Box_2.collidepoint( x, y ):
+                    
+                    selected_Difficulty = 'medium'
+                    mark_Option( option_Box_2 )
                     #return 'medium'
-                    return collect_Config( 
-                        difficulty = 'medium',
-                        is_Sound_Enabled = is_Sound_Enabled,
-                        **difficulty[ 'medium' ]
-                    )
+                    #return collect_Config( 
+                        #difficulty = 'medium',
+                        #is_Sound_Enabled = is_Sound_Enabled,
+                        #**difficulty[ 'medium' ]
+                    #)
                 
                 if option_Box_3.collidepoint( x, y ):
+                    
+                    selected_Difficulty = 'hard'
+                    mark_Option( option_Box_3 )
                     #selected = 'easy'
                     #?set_difficulty( selected )
                     #return 'hard'
-                    return collect_Config( 
-                        difficulty = 'hard',
-                        is_Sound_Enabled = is_Sound_Enabled,
-                        **difficulty[ 'hard' ]
-                    )
+                    #return collect_Config( 
+                        #difficulty = 'hard',
+                        #is_Sound_Enabled = is_Sound_Enabled,
+                        #**difficulty[ 'hard' ]
+                    #)
                 
                 #is_While_Condition = False
                 #break
