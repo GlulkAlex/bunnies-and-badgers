@@ -185,13 +185,37 @@ def show_difficulty_options(
     screen.fill( color = Color("green"), rect = option_Box_3 )
     # TypeError: rect() takes no keyword arguments
     #>option_Box_3 = pygame.draw.rect( screen, Color("green"), option_Box_3, 10 )
+    #?
+    selection_Border = pygame.draw.rect( 
+        screen, Color("gray"), option_Box_2, 10 
+    )#.clamp( option_Box_2 )#.clip( option_Box_2 )
+    #>selection_Border = option_Box_2.copy()
+    selection_Border_Buffer = Rect( 
+        selection_Border.left - 5, selection_Border.top - 5, 
+        selection_Border.width + 10, selection_Border.height + 10
+    )
     
-    def mark_Option( option_Box ):
+    ### @Done?: Somehow remove | paint over extended border buffer 
+    def mark_Option( 
+        option_Box, 
+        selection_Border = selection_Border,
+        selection_Border_Buffer = selection_Border_Buffer
+    ):
         """ helper """
-        #option_Box = 
-        pygame.draw.rect( screen, Color("gray"), option_Box, 10 )
+        old_Border = selection_Border.copy()
+        selection_Border_Buffer.center = old_Border.center
+        #?
+        pygame.draw.rect( screen, Color("red"), old_Border, 10 )
+        pygame.display.update( selection_Border_Buffer )
+        #?pygame.draw.rect( screen, Color("red"), selection_Border_Buffer, 5 )
+        pygame.draw.rect( screen, Color("green"), old_Border, 10 )
+        selection_Border.center = option_Box.center 
+        selection_Border_Buffer.center = option_Box.center
+        pygame.draw.rect( screen, Color("gray"), selection_Border, 10 )
         # return 
-        pygame.display.update( option_Box )
+        #pygame.display.update( old_Border )
+        #pygame.display.update( option_Box )
+        pygame.display.update( selection_Border_Buffer )
     
     mark_Option( option_Box_2 )
     
