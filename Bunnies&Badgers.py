@@ -66,7 +66,7 @@ def show_difficulty_options(
 # 2 - Initialize the game
 pygame.init()
 width, height = 640, 480
-screen=pygame.display.set_mode((width, height))
+screen = pygame.display.set_mode( ( width, height ) )
 pygame.mixer.init()
  
 # 3 - Load images
@@ -102,12 +102,14 @@ def main():
     arrows = []
     badtimer = 100
     badtimer1 = 0
-    badguys =[ [ 640, 100 ] ]
+    badguys =[ [ width, 100 ] ]
     healthvalue = 194
     timestart = pygame.time.get_ticks()
     is_Sound_Enabled = False
     if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     num_arrows = 100
+    arrow_Height = 32
+    arrow_Width = 26
     # towers spawn positions
     #castles_Ys = ( 30, 135, 240, 345 )
     castles_Ys = range( 30, height - 30, 105 )
@@ -130,94 +132,96 @@ def main():
         # 6.1 - Set player position and rotation
         position = pygame.mouse.get_pos()
         angle = math.atan2(
-            position[1]-(playerpos[1]+32),position[0]-(playerpos[0]+26))
-        playerrot = pygame.transform.rotate(player, 360-angle*57.29)
+            position[1] - ( playerpos[1] + arrow_Height ),
+            position[0] - ( playerpos[0] + arrow_Width ) )
+        playerrot = pygame.transform.rotate( player, 360 - angle * 57.29 )
         playerpos1 = (
-            playerpos[0]-playerrot.get_rect().width/2, 
-            playerpos[1]-playerrot.get_rect().height/2)
-        screen.blit(playerrot, playerpos1)
+            playerpos[0] - playerrot.get_rect().width / 2, 
+            playerpos[1] - playerrot.get_rect().height / 2 )
+        screen.blit( playerrot, playerpos1 )
         # 6.2 - Draw arrows
         for bullet in list(arrows):
-            velx=math.cos(bullet[0])*10
-            vely=math.sin(bullet[0])*10
-            bullet[1]+=velx
-            bullet[2]+=vely
+            velx = math.cos( bullet[0] ) * 10
+            vely = math.sin( bullet[0] ) * 10
+            bullet[1] += velx
+            bullet[2] += vely
             if( 
-                bullet[1]<-64 
-                or bullet[1]>640 
-                or bullet[2]<-64 
-                or bullet[2]>480
+                bullet[1]    < -64 
+                or bullet[1] > width 
+                or bullet[2] < -64 
+                or bullet[2] > height
             ):
                 arrows.remove(bullet)
                 if num_arrows <= 0:
                     running = 0
         for projectile in arrows:
-            arrow1 = pygame.transform.rotate(arrow, 360-projectile[0]*57.29)
-            screen.blit(arrow1, (projectile[1], projectile[2]))
+            arrow1 = pygame.transform.rotate( arrow, 360 - projectile[0] * 57.29 )
+            screen.blit( arrow1, ( projectile[1], projectile[2] ) )
         
         # 6.3 - Draw badgers
-        if badtimer==0:
-            badguys.append([640, random.randint(50,430)])
-            badtimer=100-(badtimer1*2)
-            if badtimer1>=35:
-                badtimer1=3#35
+        if badtimer == 0:
+            badguys.append( [ width, random.randint( 50, 430 ) ] )
+            badtimer = 100 - ( badtimer1 * 2 )
+            if badtimer1 >= 35:
+                badtimer1 = 35
             else:
-                badtimer1+=5
-        for badguy in list(badguys):
-            if badguy[0]<-64:
-                badguys.remove(badguy)
-            badguy[0]-=7
+                badtimer1 += 5
+        for badguy in list( badguys ):
+            if badguy[0] < -64:
+                badguys.remove( badguy )
+            badguy[0] -= 7
             # 6.3.1 - Attack castle
-            badrect=pygame.Rect(badguyimg.get_rect())
-            badrect.top=badguy[1]
-            badrect.left=badguy[0]
-            if badrect.left<64:
+            badrect = pygame.Rect( badguyimg.get_rect() )
+            badrect.top = badguy[1]
+            badrect.left = badguy[0]
+            # collision detection
+            if badrect.left < 64:
                 if is_Sound_Enabled: hit.play();
-                healthvalue -= random.randint(5,20)
-                badguys.remove(badguy)
-            #6.3.2 - Check for collisions
-            for bullet in list(arrows):
-                bullrect=pygame.Rect(arrow.get_rect())
-                bullrect.left=bullet[1]
-                bullrect.top=bullet[2]
-                if badrect.colliderect(bullrect):
+                # compute damage
+                healthvalue -= random.randint( 5, 20 )
+                badguys.remove( badguy )
+            # 6.3.2 - Check for collisions
+            for bullet in list( arrows ):
+                bullrect = pygame.Rect( arrow.get_rect() )
+                bullrect.left = bullet[1]
+                bullrect.top = bullet[2]
+                if badrect.colliderect( bullrect ):
                     if is_Sound_Enabled: enemy.play();
-                    acc[0]+=1
+                    # hit count incremented
+                    acc[0] += 1
                     ### @toDo: @FixIt
                     # ValueError: list.remove(x): x not in list
-                    badguys.remove(badguy)
-                    arrows.remove(bullet)
+                    badguys.remove( badguy )
+                    arrows.remove( bullet )
         # 6.3.3 - Next bad guy
         for badguy in badguys:
-            screen.blit(badguyimg, badguy)
+            screen.blit( badguyimg, badguy )
         # 6.4 - Draw clock
-        font = pygame.font.Font(None, 24)
-        time_remaining = 90000 - (pygame.time.get_ticks() - timestart)
+        font = pygame.font.Font( None, 24 )
+        time_remaining = 90000 - ( pygame.time.get_ticks() - timestart )
         survivedtext = font.render(
-            str(
-                (time_remaining / 60000))+":"+
-            str(
-                time_remaining/1000%60).zfill(2), 
-            True, (0,0,0)
+            str( time_remaining / 60000 ) + ":" + 
+            str( time_remaining / 1000 % 60 ).zfill(2), 
+            True, ( 0, 0, 0 )
         )
         textRect = survivedtext.get_rect()
-        textRect.topright=[635,5]
-        screen.blit(survivedtext, textRect)
+        textRect.topright=[ width - 5, 5 ]
+        screen.blit( survivedtext, textRect )
         arrowstext = font.render(
-            "Remaining arrows: " + str(num_arrows), True, (0,0,0))
+            "Remaining arrows: " + str( num_arrows ), True, ( 0, 0, 0 ) )
         arrowsTextRect = arrowstext.get_rect()
-        arrowsTextRect.topright = [635, 20]
-        screen.blit(arrowstext, arrowsTextRect)
+        arrowsTextRect.topright = [ width - 5, 20]
+        screen.blit( arrowstext, arrowsTextRect )
         # 6.5 - Draw health bar
-        screen.blit(healthbar, (5,5))
-        for health1 in range(healthvalue):
-            screen.blit(health, (health1+8,8))
+        screen.blit( healthbar, ( 5, 5 ) )
+        for health1 in range( healthvalue ):
+            screen.blit( health, ( health1 + 8, 8 ) )
         # 7 - update the screen
         pygame.display.flip()
         # 8 - loop through the events
         for event in pygame.event.get():
             # check if the event is the X button 
-            if event.type==pygame.QUIT:
+            if event.type == pygame.QUIT:
                 # if it is quit the game
                 pygame.quit() 
                 exit(0)
@@ -239,15 +243,18 @@ def main():
                     keys[2]=False
                 elif event.key==pygame.K_d:
                     keys[3]=False
-            if event.type==pygame.MOUSEBUTTONDOWN:
+            if event.type == pygame.MOUSEBUTTONDOWN:
                 if is_Sound_Enabled: shoot.play();
-                position=pygame.mouse.get_pos()
-                acc[1]+=1
+                position = pygame.mouse.get_pos()
+                # shoots count incremented 
+                acc[1] += 1
                 arrows.append(
-                    [math.atan2(position[1]-(playerpos1[1]+32),
-                                position[0]-(playerpos1[0]+26)),
-                    playerpos1[0]+32,
-                    playerpos1[1]+32])
+                    [
+                        math.atan2(
+                            position[1] - ( playerpos1[1] + arrow_Height ),
+                            position[0] - ( playerpos1[0] + arrow_Width ) ),
+                        playerpos1[0] + arrow_Height,
+                        playerpos1[1] + arrow_Height ] )
                 num_arrows -= 1
         # 9 - Move player
         if keys[0]:
