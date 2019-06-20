@@ -21,11 +21,13 @@ def set_difficulty(
     selected,
     config_options = {
         'difficulty': {
-            'easy': { 'num_arrows': 300, 'healthvalue': 400 }, 
+            'easy': { 'num_arrows': 300, 'healthvalue': 400, }, 
             # default
-            'medium': { 'num_arrows': 100, 'healthvalue': 194 }, 
-            'hard': { 'num_arrows': 50, 'healthvalue': 94 }
-        }
+            'medium': { 'num_arrows': 100, 'healthvalue': 194, }, 
+            'hard': { 'num_arrows': 50, 'healthvalue': 94, }
+        },
+        # On / Off
+        'is_Sound_Enabled': False,
     }
 ):
     """ helper
@@ -92,18 +94,19 @@ pygame.mixer.music.set_volume(0.25)
  
 # 4 - keep looping through
 def main():
-    keys = [False, False, False, False]
-    playerpos=[
-        100,height // 2#100
+    keys = [ False, False, False, False ]
+    playerpos = [
+        100, height // 2#100
     ]
-    acc=[0,0]
-    arrows=[]
-    badtimer=100
-    badtimer1=0
-    badguys=[[640,100]]
-    healthvalue=194
+    acc = [ 0, 0 ]
+    arrows = []
+    badtimer = 100
+    badtimer1 = 0
+    badguys =[ [ 640, 100 ] ]
+    healthvalue = 194
     timestart = pygame.time.get_ticks()
-    #pygame.mixer.music.play(-1, 0.0)
+    is_Sound_Enabled = False
+    if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     num_arrows = 100
     
     show_difficulty_options( width, height, screen )
@@ -111,7 +114,7 @@ def main():
     running = 1
     exitcode = 0
     while running:
-        badtimer-=1
+        badtimer -= 1
         # 5 - clear the screen before drawing it again
         screen.fill(0)
         # 6 - draw the screen elements
@@ -165,7 +168,7 @@ def main():
             badrect.top=badguy[1]
             badrect.left=badguy[0]
             if badrect.left<64:
-                #hit.play()
+                if is_Sound_Enabled: hit.play();
                 healthvalue -= random.randint(5,20)
                 badguys.remove(badguy)
             #6.3.2 - Check for collisions
@@ -174,7 +177,7 @@ def main():
                 bullrect.left=bullet[1]
                 bullrect.top=bullet[2]
                 if badrect.colliderect(bullrect):
-                    #enemy.play()
+                    if is_Sound_Enabled: enemy.play();
                     acc[0]+=1
                     badguys.remove(badguy)
                     arrows.remove(bullet)
@@ -231,7 +234,7 @@ def main():
                 elif event.key==pygame.K_d:
                     keys[3]=False
             if event.type==pygame.MOUSEBUTTONDOWN:
-                #shoot.play()
+                if is_Sound_Enabled: shoot.play();
                 position=pygame.mouse.get_pos()
                 acc[1]+=1
                 arrows.append(
