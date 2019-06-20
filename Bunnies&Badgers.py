@@ -65,6 +65,15 @@ def show_difficulty_options(
 # pygame.display.update(a rectangle or some list of rectangles)
 # -- This updates just the rectangular areas of the screen you specify.
     """
+    # pygame.display.set_caption()
+    # Set the current window caption
+    # set_caption(title, icontitle=None) -> None
+    # If the display has a window title, 
+    # this function will change the name on the window. 
+    # Some systems support an alternate shorter title 
+    # to be used for minimized displays.
+    pygame.display.set_caption("choose game options screen")
+    
     # Color(name) -> Color
     # Color(r, g, b, a) -> Color
     # Color(rgbvalue) -> Color
@@ -100,17 +109,23 @@ def show_difficulty_options(
         # TypeError: Argument must be rect style object
         rect = Rect( 
             #left = 
-            width // 10, 
+            #width // 10, 
+            50,
             #top = 
-            height // 10, 
+            #height // 10, 
+            40,
             #width = 
-            int( width * 0.8 ), 
+            #int( width * 0.8 ), 
+            400,
             #height = 
-            int( height * 0.8 ) ) )
+            #int( height * 0.8 ) 
+            300
+        ) )
     
     #for option in ( 'easy', 'medium', 'hard' ):
     #    pass
-    
+    option_Box_Width = 200
+    option_Box_Height = 40
     # Rect.copy()
     # copy the rectangle
     # copy() -> Rect
@@ -133,25 +148,32 @@ def show_difficulty_options(
             80,
             #width = 
             #?int( width * 0.1 ), 
-            200,
+            option_Box_Width,
             #height = 
             #?int( height * 0.1 ) 
-            30
+            option_Box_Height
             ) )
-    y_OffSet = 10#?height // 10
+    y_OffSet = option_Box_Height + 10#?height // 10
     #option_Box_1.left: 32
     #print "option_Box_1.left:", option_Box_1.left
     #option_Box_1.bottomleft: (32, 72)
     #print "option_Box_1.bottomleft:", option_Box_1.bottomleft
-    option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
+    option_Box_2 = option_Box_1.move( 0, y_OffSet )
     option_Box_2 = screen.fill( color = Color("green"), rect = option_Box_2 )
-    option_Box_3 = option_Box_2.move( option_Box_1.left, option_Box_2.bottom + y_OffSet )
+    option_Box_3 = option_Box_2.move( 0, y_OffSet )
     #?option_Box_3 = screen.fill( color = Color("green"), rect = option_Box_3 )
     # TypeError: rect() takes no keyword arguments
     option_Box_3 = pygame.draw.rect( screen, Color("green"), option_Box_3, 10 )
     
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
+    font_32 = pygame.font.Font( None, 32 )
+    screen.blit( 
+        font_32.render(
+            "Game difficulty level:", 
+            True, Color("black"), Color( "white" )
+        ), 
+        options_Box )
     screen.blit( 
         font_24.render(
             "easy", 
