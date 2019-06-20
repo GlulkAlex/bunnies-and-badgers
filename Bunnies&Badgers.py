@@ -32,8 +32,13 @@ def set_difficulty(
 ):
     """ helper
     """ 
+    options = vars#locals#globals
+    print "Game difficulty was {}".format( options().get( 'difficulty' ) )
+    print "Setting game difficulty to {}".format( selected )
+    options()['difficulty'] = selected
     for key, value in config_options['difficulty'][selected].items():
-        globals()[key] = value
+        print "setting {} to {}".format( key, value )
+        options()[key] = value
     
 ### @toDo: Add start game choose difficulty screen
 def show_difficulty_options( 
@@ -43,25 +48,105 @@ def show_difficulty_options(
 # pygame.display.update(a rectangle or some list of rectangles)
 # -- This updates just the rectangular areas of the screen you specify.
     """
+    # Color(name) -> Color
+    # Color(r, g, b, a) -> Color
+    # Color(rgbvalue) -> Color
+    # 'rgbvalue' can be either 
+    # a color name, 
+    # an HTML color format string, 
+    # a hex number string, 
+    # or an integer pixel value.
+
+    # Rect(left, top, width, height) -> Rect
+    # Rect((left, top), (width, height)) -> Rect
+    # Rect(object) -> Rect
+    # pygame.Rect.contains	—	test if one rectangle is inside another
+    # pygame.Rect.collidepoint	—	test if a point is inside a rectangle
+
+    # rect(Surface, color, Rect, width=0) -> Rect
+    # The width argument is the thickness to draw the outer edge. 
+    # If width is zero then the rectangle will be filled.
+    # fill Surface with a solid color
+    # or use:
+    # Surface.fill(color, rect=None, special_flags=0) -> Rect
+    # Fill the Surface with a solid color. 
+    # If no rect argument is given 
+    # the entire Surface will be filled. 
+    # The rect argument will limit the fill to a specific area. 
+    # The fill will also be contained by the Surface clip area.
+    #options_Box = pygame.draw.rect(
+        #screen, 
+        #( 0, 255, 255 ), 
+        #( ( textx - 5, texty - 5 ), ( textx_size + 10, texty_size + 10 ) ) )
+    options_Box = screen.fill( 
+        color = Color("red"), 
+        # TypeError: Argument must be rect style object
+        rect = Rect( 
+            #left = 
+            width // 10, 
+            #top = 
+            height // 10, 
+            #width = 
+            int( width * 0.5 ), 
+            #height = 
+            int( height * 0.5 ) ) )
+    
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
     # (0,0,255) for blue
     # render(text, antialias, color, background=None) -> Surface
     rendered_text = font_24.render(
         "options:", 
-        True, (255,0,0), (0,0,255)
+        True, ( 255, 0, 0 ), ( 0, 0, 255 )
     )
     text_box = rendered_text.get_rect()
     text_box.topright = [ width // 2, height * 0.5 ]
-    screen.fill(0)
+    #?screen.fill(0)
     screen.blit( rendered_text, text_box )
     # return
-    #?
-    pygame.display.update( text_box )
+    #pygame.display.update( text_box )
+    #
+    pygame.display.update( options_Box )
     #>pygame.display.flip()
-    #?
-    pygame.time.delay(1500)
+    #pygame.time.delay(1500)
     
+    # handle user's input
+    is_While_Condition = True
+    while is_While_Condition:
+        #pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit(0)
+            elif( 
+                event.type == pygame.MOUSEBUTTONDOWN 
+                # left mouse button pressed 
+                and event.button == 1
+            ):
+                x, y = event.pos
+                # selected option detection
+                # by x, y boundaries box / rectangle
+                # Rect.collidepoint()
+                # test if a point is inside a rectangle
+                # collidepoint(x, y) -> bool
+                # collidepoint((x,y)) -> bool
+                # Returns true 
+                # if the given point is inside the rectangle. 
+                # Note: A point along the right or bottom edge 
+                # is not considered to be inside the rectangle.
+                if options_Box.collidepoint( x, y ):
+                    #selected = 'easy'
+                    #?set_difficulty( selected )
+                    return 'easy'
+                #is_While_Condition = False
+                #break
+            
+                # exit detected
+                #if x >= text2x - 5 and x <= text2x + text2x_size + 5:
+                    #if y >= text2y - 5 and y <= text2y + text2y_size + 5:
+                        #pygame.quit()
+                        #exit(0)
+                return 'medium'
 
 # 2 - Initialize the game
 pygame.init()
@@ -95,6 +180,9 @@ pygame.mixer.music.set_volume(0.25)
 # 4 - keep looping through
 def main():
     keys = [ False, False, False, False ]
+    
+    difficulty = "medium"
+    
     playerpos = [
         100, height // 2#100
     ]
@@ -120,7 +208,8 @@ def main():
     player_Speed = 5
     enemy_Speed = 5#7
     
-    show_difficulty_options( width, height, screen )
+    set_difficulty( show_difficulty_options( width, height, screen ) )
+    print "Game difficulty is {}".format(difficulty)
     
     running = 1
     exitcode = 0
@@ -241,23 +330,23 @@ def main():
                 pygame.quit() 
                 exit(0)
             if event.type == pygame.KEYDOWN:
-                if event.key==K_w:
-                    keys[0]=True
-                elif event.key==K_a:
-                    keys[1]=True
-                elif event.key==K_s:
-                    keys[2]=True
-                elif event.key==K_d:
-                    keys[3]=True
+                if event.key == K_w:
+                    keys[0] = True
+                elif event.key == K_a:
+                    keys[1] = True
+                elif event.key == K_s:
+                    keys[2] = True
+                elif event.key == K_d:
+                    keys[3] = True
             if event.type == pygame.KEYUP:
-                if event.key==pygame.K_w:
-                    keys[0]=False
+                if event.key == pygame.K_w:
+                    keys[0] = False
                 elif event.key==pygame.K_a:
-                    keys[1]=False
-                elif event.key==pygame.K_s:
-                    keys[2]=False
-                elif event.key==pygame.K_d:
-                    keys[3]=False
+                    keys[1] = False
+                elif event.key == pygame.K_s:
+                    keys[2] = False
+                elif event.key == pygame.K_d:
+                    keys[3] = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if is_Sound_Enabled: shoot.play();
                 position = pygame.mouse.get_pos()
@@ -357,8 +446,9 @@ def main():
 
     pygame.display.flip()
 
-
+# play game
 main()
+# after game ends options screen 
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
