@@ -73,6 +73,9 @@ def show_difficulty_options(
     # Some systems support an alternate shorter title 
     # to be used for minimized displays.
     pygame.display.set_caption("choose game options screen")
+    pygame.mouse.set_cursor( 
+        *pygame.cursors.tri_left#>diamond#>arrow 
+    )
     
     # Color(name) -> Color
     # Color(r, g, b, a) -> Color
@@ -245,6 +248,34 @@ def show_difficulty_options(
         #( option_Box_3.left, option_Box_3.bottom + 10 ) 
         text_box 
     )
+    
+    # type: bool
+    is_Sound_Enabled = False
+    is_Sound_Enabled_Box = Rect( 0, 0, option_Box_Height, option_Box_Height )
+    #?is_Sound_Enabled_Box = option_Box_2.move( text_box.left, ... )
+    #is_Sound_Enabled_Box.topleft = ( text_box.left, text_box.bottom + 10 )
+    is_Sound_Enabled_Box.topleft = ( text_box.right + 20, text_box.top )
+    #is_Sound_Enabled_Box = 
+    screen.fill( color = Color("blue"), rect = is_Sound_Enabled_Box )
+    
+    def toggle_Sound( font_24, is_Sound_Enabled, is_Sound_Enabled_Box ):
+        """ helper """
+        rendered_text = font_24.render(
+            "On" if is_Sound_Enabled else "Off",#'X',#'V',#"✔", 
+            True, Color("black"), Color( "yellow" )
+        )
+        text_box = rendered_text.get_rect()
+        #text_box_1.left = text_box.right + 20
+        #text_box_1.top = text_box.top
+        text_box.center = is_Sound_Enabled_Box.center
+        screen.blit( rendered_text, text_box )
+        # return
+        pygame.display.update( text_box )
+        #?return not is_Sound_Enabled
+    
+    
+    toggle_Sound( font_24, is_Sound_Enabled, is_Sound_Enabled_Box )
+    
     exit_Button_Box = option_Box_1.inflate( -option_Box_Width // 2, 0 )#.move( -option_Box_Width // 2, 4 * y_OffSet )
     exit_Button_Box.topleft = ( text_box.left, text_box.top + y_OffSet  )
     screen.fill( color = Color("white"), rect = exit_Button_Box )
@@ -293,6 +324,12 @@ def show_difficulty_options(
                 if exit_Button_Box.collidepoint( x, y ):
                     pygame.quit()
                     exit(0)
+                    
+                if is_Sound_Enabled_Box.collidepoint( x, y ):
+                    ### @toDo: do flip / switch inside function ?
+                    is_Sound_Enabled = not is_Sound_Enabled
+                    toggle_Sound( font_24, is_Sound_Enabled, is_Sound_Enabled_Box )
+                    
                 # selected option detection
                 # by x, y boundaries box / rectangle
                 # Rect.collidepoint()
@@ -308,6 +345,9 @@ def show_difficulty_options(
                     #?set_difficulty( selected )
                     return 'easy'
                 
+                if option_Box_2.collidepoint( x, y ):
+                    return 'medium'
+                
                 if option_Box_3.collidepoint( x, y ):
                     #selected = 'easy'
                     #?set_difficulty( selected )
@@ -320,7 +360,7 @@ def show_difficulty_options(
                     #if y >= text2y - 5 and y <= text2y + text2y_size + 5:
                         #pygame.quit()
                         #exit(0)
-                return 'medium'
+                #return 'medium'
 
 # 2 - Initialize the game
 pygame.init()
