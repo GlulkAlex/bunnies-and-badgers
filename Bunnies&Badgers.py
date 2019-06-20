@@ -8,8 +8,12 @@ import pygame
 from pygame.locals import *
 import math
 import random
+from collections import namedtuple
  
  
+Game_Options = namedtuple(
+    'Game_Options', 
+    [ 'difficulty', 'num_arrows', 'healthvalue', 'enemy_Speed' ] )
 # User can be presented 
 # with three options: 
 # easy, medium, and hard at start. 
@@ -35,18 +39,18 @@ def set_difficulty(
 ):
     """ helper
     """ 
-    if key_args is not None:
+    #if key_args is not None:
         
-        options = key_args#() = vars#locals#globals
-        print "Game difficulty was {}".format( options.get( 'difficulty' ) )
-        print "Setting game difficulty to {}".format( selected )
-        options['difficulty'] = selected
+        #options = key_args#() = vars#locals#globals
+        #print "Game difficulty was {}".format( options.get( 'difficulty' ) )
+        #print "Setting game difficulty to {}".format( selected )
+        #options['difficulty'] = selected
         
-        for key, value in config_options['difficulty'][selected].items():
-            print "setting {} to {}".format( key, value )
-            options[key] = value
+        #for key, value in config_options['difficulty'][selected].items():
+            #print "setting {} to {}".format( key, value )
+            #options[key] = value
     
-    return selected#?, key_args
+    return Game_Options( selected, **config_options['difficulty'][selected] )#?, key_args
     
 ### @toDo: Add start game choose difficulty screen
 def show_difficulty_options( 
@@ -129,8 +133,8 @@ def show_difficulty_options(
     #print "option_Box_1.left:", option_Box_1.left
     #option_Box_1.bottomleft: (32, 72)
     #print "option_Box_1.bottomleft:", option_Box_1.bottomleft
-    option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
-    option_Box_3 = option_Box_2.move( option_Box_2.left, option_Box_2.bottom + y_OffSet )
+    #option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
+    #option_Box_3 = option_Box_2.move( option_Box_2.left, option_Box_2.bottom + y_OffSet )
     
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
@@ -249,9 +253,11 @@ def main():
     player_Speed = 5
     enemy_Speed = 5#7
     
-    set_difficulty( 
+    (
+        difficulty, num_arrows, healthvalue, enemy_Speed
+    ) = set_difficulty( 
         show_difficulty_options( width, height, screen ),
-        **{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
+        #**{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
     )
     print "Game difficulty is {}".format(difficulty)
     
