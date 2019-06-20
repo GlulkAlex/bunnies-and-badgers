@@ -101,6 +101,7 @@ def main():
     # shoots vs. hits
     acc = [ 0, 0 ]
     arrows = []
+    # controls enemy spawn speed / frequency 
     badtimer = 100
     badtimer1 = 0
     badguys = [ [ width, 100 ] ]
@@ -166,7 +167,9 @@ def main():
         for projectile in arrows:
             arrow1 = pygame.transform.rotate( arrow, 360 - projectile[0] * 57.29 )
             screen.blit( arrow1, ( projectile[1], projectile[2] ) )
-        
+        ### @toDo: find out ( refactor ) 
+        ### how often ( waves of ) badguys will be spawn 
+        ### and adjust those Parameters to alter difficulty level 
         # 6.3 - Draw badgers
         if badtimer == 0:
             badguys.append( [ width, random.randint( 50, 430 ) ] )
