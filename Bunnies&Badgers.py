@@ -151,6 +151,7 @@ def show_difficulty_options(
             #?int( height * 0.1 ) 
             option_Box_Height
             )
+    #option_Box_1 = 
     screen.fill( 
         color = Color("green"), 
         rect = option_Box_1 )
@@ -191,26 +192,35 @@ def show_difficulty_options(
         "medium", 
         True, Color("blue"), Color( "magenta" )
     )
+    text_box = rendered_text.get_rect()
+    text_box.center = option_Box_2.center
     screen.blit( 
         rendered_text, 
         #rendered_text.get_rect().clamp( option_Box_2 ) 
         #?option_Box_2.clamp( rendered_text.get_rect() )
-        option_Box_2.center# = (20,30)
+        #option_Box_2.center# = (20,30)
+        text_box
     )
+    rendered_text = font_24.render(
+        "hard", 
+        True, Color("red"), Color( "yellow" )
+    )
+    text_box = rendered_text.get_rect()
+    text_box.center = option_Box_3.center
     screen.blit( 
-        font_24.render(
-            "hard", 
-            True, Color("red"), Color( "yellow" )
-        ), 
-        option_Box_3 )
+        rendered_text, 
+        #option_Box_3 
+        text_box
+    )
     # (0,0,255) for blue
     # render(text, antialias, color, background=None) -> Surface
     rendered_text = font_24.render(
         "Audio options:", 
         True, Color("blue"), Color( "yellow" )
     )
-    #text_box = rendered_text.get_rect()
+    text_box = rendered_text.get_rect()
     #text_box.topright = [ width // 2, height * 0.5 ]
+    text_box.topleft = ( option_Box_3.left, option_Box_3.bottom + 10 )
     
     #?screen.fill(0)
     
@@ -230,7 +240,22 @@ def show_difficulty_options(
     # An optional `area` rectangle can be passed as well. 
     # This represents 
     # a smaller portion of the source Surface to draw.
-    screen.blit( rendered_text, ( option_Box_3.left, option_Box_3.bottom + 10 ) )#text_box )
+    screen.blit( 
+        rendered_text, 
+        #( option_Box_3.left, option_Box_3.bottom + 10 ) 
+        text_box 
+    )
+    exit_Button_Box = option_Box_1.inflate( -option_Box_Width // 2, 0 )#.move( -option_Box_Width // 2, 4 * y_OffSet )
+    exit_Button_Box.topleft = ( text_box.left, text_box.top + y_OffSet  )
+    screen.fill( color = Color("white"), rect = exit_Button_Box )
+    rendered_text = font_24.render(
+        "Exit", 
+        True, Color("white"), Color( "black" )
+    )
+    text_box = rendered_text.get_rect()
+    text_box.center = exit_Button_Box.center
+    screen.blit( rendered_text, text_box )
+    
     # return
     #pygame.display.update( text_box )
     #
@@ -252,6 +277,10 @@ def show_difficulty_options(
                 and event.button == 1
             ):
                 x, y = event.pos
+                
+                if exit_Button_Box.collidepoint( x, y ):
+                    pygame.quit()
+                    exit(0)
                 # selected option detection
                 # by x, y boundaries box / rectangle
                 # Rect.collidepoint()
