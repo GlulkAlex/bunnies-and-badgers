@@ -108,6 +108,9 @@ def main():
     is_Sound_Enabled = False
     if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     num_arrows = 100
+    # towers spawn positions
+    #castles_Ys = ( 30, 135, 240, 345 )
+    castles_Ys = range( 30, height - 30, 105 )
     
     show_difficulty_options( width, height, screen )
     
@@ -118,10 +121,11 @@ def main():
         # 5 - clear the screen before drawing it again
         screen.fill(0)
         # 6 - draw the screen elements
-        for x in range(width/grass.get_width()+1):
-            for y in range(height/grass.get_height()+1):
-                screen.blit(grass,(x*100,y*100))
-        for y in ( 30, 135, 240, 345 ):
+        for x in range( width / grass.get_width() + 1 ):
+            for y in range( height / grass.get_height() + 1 ):
+                screen.blit( grass, ( x * 100, y * 100 ) )
+        
+        for y in castles_Ys:
             screen.blit( castle, ( 0, y ) )
         # 6.1 - Set player position and rotation
         position = pygame.mouse.get_pos()
@@ -179,6 +183,8 @@ def main():
                 if badrect.colliderect(bullrect):
                     if is_Sound_Enabled: enemy.play();
                     acc[0]+=1
+                    ### @toDo: @FixIt
+                    # ValueError: list.remove(x): x not in list
                     badguys.remove(badguy)
                     arrows.remove(bullet)
         # 6.3.3 - Next bad guy
