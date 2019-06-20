@@ -182,6 +182,7 @@ def main():
         for badguy in list( badguys ):
             if badguy[0] < -64:
                 badguys.remove( badguy )
+                continue
             badguy[0] -= enemy_Speed#7
             # 6.3.1 - Attack castle
             badrect = pygame.Rect( badguyimg.get_rect() )
