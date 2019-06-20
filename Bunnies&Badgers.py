@@ -59,11 +59,23 @@ def set_difficulty(
     
 ### @toDo: Add start game choose difficulty screen
 def show_difficulty_options( 
-    width, height, screen 
+    width, height, screen,
+    difficulty = {
+        'easy': { 'num_arrows': 300, 'healthvalue': 400, 'enemy_Speed': 1 }, 
+        # default
+        'medium': { 'num_arrows': 100, 'healthvalue': 194, 'enemy_Speed': 7 }, 
+        'hard': { 'num_arrows': 50, 'healthvalue': 94, 'enemy_Speed': 10 }
+    }
 ):
     """ helper
-# pygame.display.update(a rectangle or some list of rectangles)
-# -- This updates just the rectangular areas of the screen you specify.
+
+    returns:
+    --------
+    ( 
+        difficulty: enum[ str ],
+        num_arrows: int, healthvalue: int, enemy_Speed: int,
+        is_Sound_Enabled: bool
+    )
     """
     # pygame.display.set_caption()
     # Set the current window caption
@@ -270,6 +282,8 @@ def show_difficulty_options(
         text_box.center = is_Sound_Enabled_Box.center
         screen.blit( rendered_text, text_box )
         # return
+        # pygame.display.update(a rectangle or some list of rectangles)
+        # This updates just the rectangular areas of the screen you specify.
         pygame.display.update( text_box )
         #?return not is_Sound_Enabled
     
@@ -306,6 +320,10 @@ def show_difficulty_options(
     #>pygame.display.flip()
     #pygame.time.delay(1500)
     
+    collect_Config = ( 
+        lambda difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, **rest: ( 
+        difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, rest ) 
+    )
     # handle user's input
     is_While_Condition = True
     while is_While_Condition:
@@ -343,15 +361,32 @@ def show_difficulty_options(
                 if option_Box_1.collidepoint( x, y ):
                     #selected = 'easy'
                     #?set_difficulty( selected )
-                    return 'easy'
+                    # ? is_Sound_Enabled
+                    #return 'easy'
+                    return collect_Config( 
+                        difficulty = 'easy',
+                        is_Sound_Enabled = is_Sound_Enabled,
+                        **difficulty[ 'easy' ]
+                    )
                 
                 if option_Box_2.collidepoint( x, y ):
-                    return 'medium'
+                    #return 'medium'
+                    return collect_Config( 
+                        difficulty = 'medium',
+                        is_Sound_Enabled = is_Sound_Enabled,
+                        **difficulty[ 'medium' ]
+                    )
                 
                 if option_Box_3.collidepoint( x, y ):
                     #selected = 'easy'
                     #?set_difficulty( selected )
-                    return 'hard'
+                    #return 'hard'
+                    return collect_Config( 
+                        difficulty = 'hard',
+                        is_Sound_Enabled = is_Sound_Enabled,
+                        **difficulty[ 'hard' ]
+                    )
+                
                 #is_While_Condition = False
                 #break
             
@@ -411,7 +446,6 @@ def main():
     timestart = pygame.time.get_ticks()
     
     is_Sound_Enabled = False
-    if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     num_arrows = 100
     
     arrow_Height = 32
@@ -423,12 +457,13 @@ def main():
     enemy_Speed = 5#7
     
     (
-        difficulty, num_arrows, healthvalue, enemy_Speed, _
-    ) = set_difficulty( 
-        show_difficulty_options( width, height, screen ),
+        difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, _
+    ) = show_difficulty_options( width, height, screen )#set_difficulty( 
+        #show_difficulty_options( width, height, screen ),
         #**{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
-    )
-    print "Game difficulty is {}".format(difficulty)
+    #)
+    print "Game difficulty is {}, is_Sound_Enabled: {}".format( difficulty, is_Sound_Enabled )
+    if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     
     running = 1
     exitcode = 0
