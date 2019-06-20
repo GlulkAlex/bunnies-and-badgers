@@ -111,38 +111,65 @@ def show_difficulty_options(
     #for option in ( 'easy', 'medium', 'hard' ):
     #    pass
     
-    #Rect.copy()
-    #copy the rectangle
-    #copy() -> Rect
-    #Returns a new rectangle 
-    #having the same position and size as the original.
-    #Rect.move()
-    #moves the rectangle
-    #move(x, y) -> Rect
-    #Returns a new rectangle 
-    #that is moved by the given offset. 
-    #The x and y arguments can be any integer value, positive or negative.
+    # Rect.copy()
+    # copy the rectangle
+    # copy() -> Rect
+    # Returns a new rectangle 
+    # having the same position and size as the original.
+    # Rect.move()
+    # moves the rectangle
+    # move(x, y) -> Rect
+    # Returns a new rectangle 
+    # that is moved by the given offset. 
+    # The x and y arguments can be any integer value, positive or negative.
     option_Box_1 = screen.fill( 
         color = Color("green"), 
         rect = Rect( 
             #left = 
-            width // 20, 
+            #?width // 20, 
+            80,
             #top = 
-            height // 20, 
+            #?height // 20, 
+            80,
             #width = 
-            int( width * 0.1 ), 
+            #?int( width * 0.1 ), 
+            200,
             #height = 
-            int( height * 0.1 ) ) )
-    y_OffSet = height // 10
+            #?int( height * 0.1 ) 
+            30
+            ) )
+    y_OffSet = 10#?height // 10
     #option_Box_1.left: 32
     #print "option_Box_1.left:", option_Box_1.left
     #option_Box_1.bottomleft: (32, 72)
     #print "option_Box_1.bottomleft:", option_Box_1.bottomleft
-    #option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
-    #option_Box_3 = option_Box_2.move( option_Box_2.left, option_Box_2.bottom + y_OffSet )
+    option_Box_2 = option_Box_1.move( option_Box_1.left, option_Box_1.bottom + y_OffSet )
+    option_Box_2 = screen.fill( color = Color("green"), rect = option_Box_2 )
+    option_Box_3 = option_Box_2.move( option_Box_1.left, option_Box_2.bottom + y_OffSet )
+    #?option_Box_3 = screen.fill( color = Color("green"), rect = option_Box_3 )
+    # TypeError: rect() takes no keyword arguments
+    option_Box_3 = pygame.draw.rect( screen, Color("green"), option_Box_3, 10 )
     
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
+    screen.blit( 
+        font_24.render(
+            "easy", 
+            True, Color("yellow"), Color( "black" )
+        ), 
+        option_Box_1 )
+    screen.blit( 
+        font_24.render(
+            "medium", 
+            True, Color("blue"), Color( "magenta" )
+        ), 
+        option_Box_2 )
+    screen.blit( 
+        font_24.render(
+            "hard", 
+            True, Color("red"), Color( "yellow" )
+        ), 
+        option_Box_3 )
     # (0,0,255) for blue
     # render(text, antialias, color, background=None) -> Surface
     rendered_text = font_24.render(
@@ -152,6 +179,22 @@ def show_difficulty_options(
     text_box = rendered_text.get_rect()
     text_box.topright = [ width // 2, height * 0.5 ]
     #?screen.fill(0)
+    # Surface.blit()
+    # draw one image onto another
+    # Surface.blit(source, dest, area=None, special_flags = 0) -> Rect
+    # Draws a source Surface onto this Surface. 
+    # The draw can be positioned with the `dest` argument. 
+    # `Dest` can either be 
+    # pair of coordinates representing the upper left corner of the `source`. 
+    # A Rect can also be passed 
+    # as the destination 
+    # and the topleft corner of the rectangle 
+    # will be used 
+    # as the position for the blit. 
+    # The size of the destination rectangle does not effect the blit.
+    # An optional `area` rectangle can be passed as well. 
+    # This represents 
+    # a smaller portion of the source Surface to draw.
     screen.blit( rendered_text, text_box )
     # return
     #pygame.display.update( text_box )
