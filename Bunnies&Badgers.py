@@ -159,7 +159,8 @@ def show_difficulty_options(
     #option_Box_1.bottomleft: (32, 72)
     #print "option_Box_1.bottomleft:", option_Box_1.bottomleft
     option_Box_2 = option_Box_1.move( 0, y_OffSet )
-    option_Box_2 = screen.fill( color = Color("green"), rect = option_Box_2 )
+    #?option_Box_2 = 
+    screen.fill( color = Color("green"), rect = option_Box_2 )
     option_Box_3 = option_Box_2.move( 0, y_OffSet )
     #?option_Box_3 = screen.fill( color = Color("green"), rect = option_Box_3 )
     # TypeError: rect() takes no keyword arguments
@@ -249,10 +250,15 @@ def show_difficulty_options(
                 # if the given point is inside the rectangle. 
                 # Note: A point along the right or bottom edge 
                 # is not considered to be inside the rectangle.
-                if options_Box.collidepoint( x, y ):
+                if option_Box_1.collidepoint( x, y ):
                     #selected = 'easy'
                     #?set_difficulty( selected )
                     return 'easy'
+                
+                if option_Box_3.collidepoint( x, y ):
+                    #selected = 'easy'
+                    #?set_difficulty( selected )
+                    return 'hard'
                 #is_While_Condition = False
                 #break
             
