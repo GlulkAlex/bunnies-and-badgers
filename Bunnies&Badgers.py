@@ -587,6 +587,7 @@ def main():
         
         def draw( 
             self, 
+            current_Health,
             screen = screen,
             display = pygame.display,
             font = pygame.font.Font( None, 24 )
@@ -594,8 +595,10 @@ def main():
             screen.fill( color = Color("black"), rect = self.background_Border_Box )
             #?
             screen.fill( color = Color("red"), rect = self.damage_Box )
-            screen.fill( color = Color("green"), rect = self.health_Box )
+            if( self.health_Left != 0 and current_Health != 0 ):
+                screen.fill( color = Color("green"), rect = self.health_Box )
             display.update( self.background_Border_Box )
+            
             rendered_text = font.render(
                 "HP:{}".format( self.health_Left ), 
                 True, Color("yellow"), Color( "black" )
@@ -666,6 +669,7 @@ def main():
             playerpos[0] - playerrot.get_rect().width / 2, 
             playerpos[1] - playerrot.get_rect().height / 2 )
         screen.blit( playerrot, playerpos1 )
+        
         # 6.2 - Draw arrows
         for bullet in list(arrows):
             ### @toDo: replace magic number 10 with named constant
@@ -698,6 +702,10 @@ def main():
                 badtimer1 = 35
             else:
                 badtimer1 += 5
+        
+        # before taking hits ? 
+        #health_Bar.draw()
+        
         for badguy in list( badguys ):
             if badguy[0] < -64:
                 badguys.remove( badguy )
@@ -765,7 +773,8 @@ def main():
         for health_bit in range( 0, healthvalue, 1 ):
             screen.blit( health, ( health_bit + 8, 8 ) )
         
-        health_Bar.draw()
+        # healthbar redrawn according to current healthvalue ( all damage taken accounted )
+        health_Bar.draw( healthvalue )
         #health_Bar.take_Hit( damage = healthvalue // 2 )
         
         # 7 - update the screen
