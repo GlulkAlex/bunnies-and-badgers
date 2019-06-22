@@ -578,14 +578,14 @@ def main():
             )
             self.damage_Box.center = self.background_Border_Box.center
             self.health_Box = Rect( 
-                #0,
-                self.damage_Box.left,
-                #0,
-                self.damage_Box.top,
+                0,
+                #?self.damage_Box.left,
+                0,
+                #?self.damage_Box.top,
                 max_Width,
                 8
             )
-            #self.health_Box.center = self.background_Border_Box.center
+            self.health_Box.center = self.background_Border_Box.center
         
         def draw( 
             self, 
@@ -595,7 +595,7 @@ def main():
             screen.fill( color = Color("black"), rect = self.background_Border_Box )
             #?
             screen.fill( color = Color("red"), rect = self.damage_Box )
-            #screen.fill( color = Color("green"), rect = self.health_Box )
+            screen.fill( color = Color("green"), rect = self.health_Box )
             display.update( self.background_Border_Box )
     
         def take_Hit( 
@@ -607,19 +607,26 @@ def main():
             """shrink health_Box to the left ( from the right )"""
             self.health_Left = max( 0, self.health_Left - damage )
             # translate damage to its view
-            damage_Size = self.width_2_Health_Ratio * damage
+            damage_Size = int( self.width_2_Health_Ratio * damage )
+            health_Size = int( self.width_2_Health_Ratio * self.health_Left )
             
-            if self.health_Left > 0:
+            if self.health_Left > 0 and damage_Size > 0:
                 
-                self.damage_Box.left = self.damage_Box.right - damage_Size
-                screen.fill( color = Color("red"), rect = self.damage_Box )
+                #self.damage_Box.width = self.damage_Box.width + damage_Size
+                #self.damage_Box.right = self.health_Box.right
+                #screen.fill( color = Color("red"), rect = self.damage_Box )
+                
                 #?self.health_Box.right = self.health_Box.left + self.health_Left
-                #self.health_Box.right = self.damage_Box.right - damage_Size
-                #screen.fill( color = Color("green"), rect = self.health_Box )
+                self.health_Box.width = health_Size
+                screen.fill( color = Color("green"), rect = self.health_Box )
                 display.update( self.background_Border_Box )
     
     
-    health_Bar = Health_Bar( max_Value = healthvalue, max_Width = 200, bar_Top_Y = 25 )
+    health_Bar = Health_Bar( 
+        max_Value = healthvalue, 
+        max_Width = 200, 
+        bar_Top_Y = 25 
+    )
     
     running = 1
     exitcode = 0
@@ -692,8 +699,13 @@ def main():
             if badrect.left < 64:
                 if is_Sound_Enabled: hit.play();
                 # compute damage
-                healthvalue -= random.randint( 5, 20 )
+                damage = random.randint( 5, 20 )
+                healthvalue -= damage
+                
+                health_Bar.take_Hit( damage = damage )
+                
                 badguys.remove( badguy )
+            
             # 6.3.2 - Check for collisions
             for bullet in list( arrows ):
                 bullrect = pygame.Rect( arrow.get_rect() )
@@ -707,9 +719,11 @@ def main():
                     # ValueError: list.remove(x): x not in list
                     badguys.remove( badguy )
                     arrows.remove( bullet )
+        
         # 6.3.3 - Next bad guy
         for badguy in badguys:
             screen.blit( badguyimg, badguy )
+        
         # 6.4 - Draw clock
         font = pygame.font.Font( None, 24 )
         ### @toDo: replace magic number 90000 with named constant
@@ -740,7 +754,8 @@ def main():
             screen.blit( health, ( health_bit + 8, 8 ) )
         
         health_Bar.draw()
-        health_Bar.take_Hit( 50 )
+        #health_Bar.take_Hit( damage = healthvalue // 2 )
+        
         # 7 - update the screen
         pygame.display.flip()
         
