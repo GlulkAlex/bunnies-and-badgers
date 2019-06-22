@@ -550,6 +550,7 @@ def main():
             """
             ### @Done: added position to place | draw on screen | parent container 
             ### @toDo: @fixIt last damage HP leftover
+            ### @Dome: @fixEd damage bar for easy mode when max_Health > max_Width
             """
             # screen
             #self.scr = scr
@@ -558,7 +559,7 @@ def main():
             self.max_Width = max_Width
             # HP: 100 -> bar: 200 => 1 HP -> 2 bar pixels 
             # HP: 200 -> bar: 100 => 1 HP -> 0.5 bar pixels 
-            self.width_2_Health_Ratio = max_Width / max_Value
+            self.width_2_Health_Ratio = max_Width / float( max_Value )
             self.bar_Left_X = bar_Left_X
             self.bar_Top_Y = bar_Top_Y
             self.background_Border_Box = Rect( 
