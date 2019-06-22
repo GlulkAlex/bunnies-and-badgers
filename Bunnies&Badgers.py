@@ -84,12 +84,22 @@ def show_difficulty_options(
     # this function will change the name on the window. 
     # Some systems support an alternate shorter title 
     # to be used for minimized displays.
+    scale_Factor = 0.8
+    screen_Center_X = width // 2
+    screen_Center_Y = height // 2
+    selected_Difficulty = 'medium'
+    option_Box_Width = 200
+    option_Box_Height = 40
+    y_OffSet = option_Box_Height + 10#?height // 10
+    
+    #?pygame.font.init()
+    font_24 = pygame.font.Font( None, 24 )
+    font_32 = pygame.font.Font( None, 32 )
+    
     pygame.display.set_caption("choose game options screen")
     pygame.mouse.set_cursor( 
         *pygame.cursors.tri_left#>diamond#>arrow 
     )
-    
-    selected_Difficulty = 'medium'
     
     # Color(name) -> Color
     # Color(r, g, b, a) -> Color
@@ -121,7 +131,7 @@ def show_difficulty_options(
         #screen, 
         #( 0, 255, 255 ), 
         #( ( textx - 5, texty - 5 ), ( textx_size + 10, texty_size + 10 ) ) )
-    scale_Factor = 0.8
+    
     options_Box = Rect( 
         #left = 
         #width // 10, 
@@ -138,7 +148,7 @@ def show_difficulty_options(
         int( height * scale_Factor ) 
         #300
     )
-    options_Box.center = ( width // 2, height // 2 )
+    options_Box.center = ( screen_Center_X, screen_Center_Y )
     screen.fill( 
         color = Color("red"), 
         # TypeError: Argument must be rect style object
@@ -146,8 +156,7 @@ def show_difficulty_options(
     
     #for option in ( 'easy', 'medium', 'hard' ):
     #    pass
-    option_Box_Width = 200
-    option_Box_Height = 40
+    
     # Rect.copy()
     # copy the rectangle
     # copy() -> Rect
@@ -159,25 +168,27 @@ def show_difficulty_options(
     # Returns a new rectangle 
     # that is moved by the given offset. 
     # The x and y arguments can be any integer value, positive or negative.
-    option_Box_1 = Rect( 
-            #left = 
-            #?width // 20, 
-            80,
-            #top = 
-            #?height // 20, 
-            80,
-            #width = 
-            #?int( width * 0.1 ), 
-            option_Box_Width,
-            #height = 
-            #?int( height * 0.1 ) 
-            option_Box_Height
-            )
-    #option_Box_1 = 
-    screen.fill( 
+    option_Box = Rect( 
+        #left = 
+        #?width // 20, 
+        0,
+        #top = 
+        #?height // 20, 
+        0,
+        #width = 
+        #?int( width * 0.1 ), 
+        option_Box_Width,
+        #height = 
+        #?int( height * 0.1 ) 
+        option_Box_Height
+    )
+    
+    option_Box_1 = option_Box.move( 0, options_Box.top + y_OffSet )
+    option_Box_1.centerx = screen_Center_X
+    option_Box_1 = screen.fill( 
         color = Color("green"), 
         rect = option_Box_1 )
-    y_OffSet = option_Box_Height + 10#?height // 10
+    
     #option_Box_1.left: 32
     #print "option_Box_1.left:", option_Box_1.left
     #option_Box_1.bottomleft: (32, 72)
@@ -224,10 +235,6 @@ def show_difficulty_options(
         pygame.display.update( selection_Border_Buffer )
     
     mark_Option( option_Box_2 )
-    
-    #?pygame.font.init()
-    font_24 = pygame.font.Font( None, 24 )
-    font_32 = pygame.font.Font( None, 32 )
     
     rendered_text = font_32.render(
         "Select game difficulty level and audio option:", 
