@@ -251,11 +251,8 @@ def show_difficulty_options(
     )
     text_box = rendered_text.get_rect()
     text_box.center = option_Box_1.center
-    screen.blit( 
-        rendered_text, 
-        #option_Box_1 
-        text_box
-    )
+    screen.blit( rendered_text, text_box )#option_Box_1 )
+    
     rendered_text = font_24.render(
         "medium", 
         True, Color("blue"), Color( "magenta" )
@@ -590,13 +587,23 @@ def main():
         def draw( 
             self, 
             screen = screen,
-            display = pygame.display
+            display = pygame.display,
+            font = pygame.font.Font( None, 24 )
         ):
             screen.fill( color = Color("black"), rect = self.background_Border_Box )
             #?
             screen.fill( color = Color("red"), rect = self.damage_Box )
             screen.fill( color = Color("green"), rect = self.health_Box )
             display.update( self.background_Border_Box )
+            rendered_text = font.render(
+                "HP:{}".format( self.health_Left ), 
+                True, Color("yellow"), Color( "black" )
+            )
+            text_box = rendered_text.get_rect()
+            text_box.center = self.background_Border_Box.center
+            text_box.left = self.background_Border_Box.right + 10
+            screen.blit( rendered_text, text_box )
+            display.update( text_box )
     
         def take_Hit( 
             self, 
