@@ -3,6 +3,7 @@
 
 # 0 loop_fix branch
 
+from __future__ import print_function
 # 1 - Import library
 import pygame
 from pygame.locals import *
@@ -531,7 +532,7 @@ def main():
         #show_difficulty_options( width, height, screen ),
         #**{ 'num_arrows': num_arrows, 'healthvalue': healthvalue, 'enemy_Speed': enemy_Speed }
     #)
-    print "Game difficulty is {}, is_Sound_Enabled: {}".format( difficulty, is_Sound_Enabled )
+    print( "Game difficulty is {}, is_Sound_Enabled: {}".format( difficulty, is_Sound_Enabled ) )
     if is_Sound_Enabled: pygame.mixer.music.play( -1, 0.0 );
     
     running = 1
