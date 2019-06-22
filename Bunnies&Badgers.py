@@ -548,7 +548,8 @@ def main():
             bar_Top_Y = 5
         ):
             """
-            ### @toDo: add position to place | draw on screen | parent container 
+            ### @Done: added position to place | draw on screen | parent container 
+            ### @toDo: @fixIt last damage HP leftover
             """
             # screen
             #self.scr = scr
@@ -621,12 +622,16 @@ def main():
                 
                 #self.damage_Box.width = self.damage_Box.width + damage_Size
                 #self.damage_Box.right = self.health_Box.right
+                # it does not affect last damage HP leftover 
                 #screen.fill( color = Color("red"), rect = self.damage_Box )
                 
                 #?self.health_Box.right = self.health_Box.left + self.health_Left
                 self.health_Box.width = health_Size
                 screen.fill( color = Color("green"), rect = self.health_Box )
                 display.update( self.background_Border_Box )
+            #else:
+                #screen.fill( color = Color("red"), rect = self.damage_Box )
+                #display.update( self.damage_Box )
     
     
     health_Bar = Health_Bar( 
