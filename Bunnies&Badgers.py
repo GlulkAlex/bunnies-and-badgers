@@ -228,12 +228,15 @@ def show_difficulty_options(
     #?pygame.font.init()
     font_24 = pygame.font.Font( None, 24 )
     font_32 = pygame.font.Font( None, 32 )
-    screen.blit( 
-        font_32.render(
-            "Game difficulty level:", 
-            True, Color("black"), Color( "white" )
-        ), 
-        options_Box )
+    
+    rendered_text = font_32.render(
+        "Select game difficulty level and audio option:", 
+        True, Color("black"), Color( "white" )
+    )
+    text_box = rendered_text.get_rect()
+    text_box.center = ( options_Box.center[0], options_Box.top + text_box.height )
+    screen.blit( rendered_text, text_box )#options_Box )
+    
     rendered_text = font_24.render(
         "easy", 
         True, Color("yellow"), Color( "black" )
