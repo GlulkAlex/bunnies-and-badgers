@@ -342,7 +342,39 @@ def show_difficulty_options(
     
     exit_Button_Box = option_Box_1.inflate( -option_Box_Width // 2, 0 )#.move( -option_Box_Width // 2, 4 * y_OffSet )
     exit_Button_Box.topleft = ( text_box.left, text_box.top + y_OffSet  )
+    
+    def add_Button_Text(
+        # drawing position / area
+        button_Box,
+        button_Text = "Exit",
+        button_Text_Color = Color("white"), 
+        button_Text_Background_Color = Color( "black" ),
+        font = font_24,
+        screen = screen
+    ):
+        """ helper
+        """
+        rendered_text = font.render(
+            button_Text, 
+            True, button_Text_Color, button_Text_Background_Color
+        )
+        text_box = rendered_text.get_rect()
+        text_box.center = button_Box.center
+        return screen.blit( rendered_text, text_box )
+        #return None
+    
     screen.fill( color = Color("white"), rect = exit_Button_Box )
+    
+    def add_Button(
+        # drawing position / area
+        button_Box,
+        button_Color = Color("white")
+    ):
+        """ helper
+        """
+        return screen.fill( color = button_Color, rect = button_Box )
+        #return None
+    
     rendered_text = font_24.render(
         "Exit", 
         True, Color("white"), Color( "black" )
@@ -350,6 +382,8 @@ def show_difficulty_options(
     text_box = rendered_text.get_rect()
     text_box.center = exit_Button_Box.center
     screen.blit( rendered_text, text_box )
+    
+    #pygame.display.update( add_Button_Text( button_Box = add_Button( button_Box = exit_Button_Box ) ) )
     
     start_Button_Box = exit_Button_Box.copy()#move( y_OffSet, 0 )
     #?start_Button_Box.topright = ( option_Box_3.right, start_Button_Box.bottom )
@@ -369,7 +403,29 @@ def show_difficulty_options(
     pygame.display.update( options_Box )
     #>pygame.display.flip()
     #pygame.time.delay(1500)
-    
+
+    def animate_Exit_Button_Push(
+        button_Box = exit_Button_Box,
+        #?display = pygame.display
+    ):
+        """ helper 
+        ### @toDo: implement
+        """
+        #>
+        pygame.display.update( add_Button( button_Box, button_Color = Color("black") ) )
+        #?add_Button( button_Box, button_Color = Color("black") )
+        pressed_Button_Box = button_Box.inflate( -5, -5 )
+        add_Button_Text( button_Box = add_Button( button_Box = pressed_Button_Box ) )
+        #
+        #>
+        pygame.display.update( pressed_Button_Box )
+        #?pygame.display.update( button_Box )
+        #?pygame.display.update( button_Box.union( pressed_Button_Box ) )
+        pygame.time.wait( 500 )
+        
+        pygame.quit()
+        exit(0)
+
     collect_Config = ( 
         lambda difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, **rest: ( 
         difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, rest ) 
@@ -390,9 +446,10 @@ def show_difficulty_options(
                 x, y = event.pos
                 
                 if exit_Button_Box.collidepoint( x, y ):
-                    pygame.quit()
-                    exit(0)
-                
+                    #>pygame.quit()
+                    #>exit(0)
+                    animate_Exit_Button_Push( button_Box = exit_Button_Box )
+                    
                 if start_Button_Box.collidepoint( x, y ):
                     # selected_Difficulty
                     return collect_Config( 
@@ -588,6 +645,7 @@ def main():
         
         def draw( 
             self, 
+            # ugly workaround hack to comply with current health / damage logic
             current_Health,
             screen = screen,
             display = pygame.display,
