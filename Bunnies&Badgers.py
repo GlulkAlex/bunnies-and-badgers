@@ -388,6 +388,10 @@ def show_difficulty_options(
     start_Button_Box = exit_Button_Box.copy()#move( y_OffSet, 0 )
     #?start_Button_Box.topright = ( option_Box_3.right, start_Button_Box.bottom )
     start_Button_Box.right = option_Box_3.right
+    
+    start_Button_Shadow_Box = start_Button_Box.move( 10, 10 )
+    screen.fill( color = Color("gray"), rect = start_Button_Shadow_Box )
+    
     screen.fill( color = Color("green"), rect = start_Button_Box )
     rendered_text = font_24.render(
         "Start", 
@@ -409,7 +413,7 @@ def show_difficulty_options(
         #?display = pygame.display
     ):
         """ helper 
-        ### @toDo: implement
+        ### @Done: implemented
         """
         #>
         pygame.display.update( add_Button( button_Box, button_Color = Color("black") ) )
@@ -422,10 +426,34 @@ def show_difficulty_options(
         #?pygame.display.update( button_Box )
         #?pygame.display.update( button_Box.union( pressed_Button_Box ) )
         pygame.time.wait( 500 )
-        
-        pygame.quit()
-        exit(0)
+        # ?!?
+        #pygame.quit()
+        #exit(0)
 
+    def animate_Start_Button_Push(
+        button_Box = start_Button_Box,
+        new_Position = start_Button_Shadow_Box,
+        background_Color = Color( "red" ),
+    ):
+        """ helper 
+        ### @toDo: implement
+        """
+        # restore background
+        pygame.display.update( add_Button( button_Box, button_Color = background_Color ) )
+        
+        #?add_Button( button_Box, button_Color = Color("black") )
+        add_Button_Text( 
+            button_Box = add_Button( button_Box = new_Position ), 
+            button_Text = "New",
+            button_Text_Color = Color("black"), 
+            button_Text_Background_Color = Color( "white" ),
+        )
+        #
+        #>
+        pygame.display.update( new_Position )
+        pygame.time.wait( 500 )
+    
+    
     collect_Config = ( 
         lambda difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, **rest: ( 
         difficulty, num_arrows, healthvalue, enemy_Speed, is_Sound_Enabled, rest ) 
@@ -446,11 +474,19 @@ def show_difficulty_options(
                 x, y = event.pos
                 
                 if exit_Button_Box.collidepoint( x, y ):
-                    #>pygame.quit()
-                    #>exit(0)
                     animate_Exit_Button_Push( button_Box = exit_Button_Box )
-                    
+                    #>
+                    pygame.quit()
+                    #>
+                    exit(0)
+                
                 if start_Button_Box.collidepoint( x, y ):
+                    
+                    animate_Start_Button_Push(
+                        button_Box = start_Button_Box,
+                        new_Position = start_Button_Shadow_Box,
+                        background_Color = Color( "red" )
+                    )
                     # selected_Difficulty
                     return collect_Config( 
                         difficulty = selected_Difficulty,
