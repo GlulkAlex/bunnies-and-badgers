@@ -549,6 +549,7 @@ def main():
         
         for y in castles_Ys:
             screen.blit( castle, ( 0, y ) )
+        
         # 6.1 - Set player position and rotation
         position = pygame.mouse.get_pos()
         angle = math.atan2(
@@ -640,12 +641,97 @@ def main():
         arrowsTextRect = arrowstext.get_rect()
         arrowsTextRect.topright = [ width - 5, 20]
         screen.blit( arrowstext, arrowsTextRect )
+        
         # 6.5 - Draw health bar
+        ### @toDo: adjust health bar width or damage size to healthvalue
+        ### or replace them alltogether with painted rectangels inside board
+        ### or use 
+        ### # $ pip3 install tqdm
+        ### from tqdm import tqdm
+        ### for Progress Bar
         screen.blit( healthbar, ( 5, 5 ) )
-        for health1 in range( healthvalue ):
-            screen.blit( health, ( health1 + 8, 8 ) )
+        for health_bit in range( 0, healthvalue, 1 ):
+            screen.blit( health, ( health_bit + 8, 8 ) )
+        
+        #def draw_Health_Bar
+        class Health_Bar(  ):
+            """ Custom component
+            to draw and handle health changes
+            ### it must show red background while | as green healthbar shrinks 
+            ### overtime by taking damage 
+            """
+            def __init__( 
+                self, 
+                #scr, 
+                max_Value = 100, 
+                max_Width = 100,
+                bar_Left_X = 5,
+                bar_Top_Y = 5
+            ):
+                """
+                ### @toDo: add position to place | draw on screen | parent container 
+                """
+                # screen
+                #self.scr = scr
+                self.health_Left = max_Value
+                self.max_Width = max_Width
+                self.bar_Left_X = bar_Left_X
+                self.bar_Top_Y = bar_Top_Y
+                self.background_Border_Box = Rect( 
+                    bar_Left_X,
+                    bar_Top_Y,
+                    max_Width + 2,
+                    10
+                )
+                self.damage_Box = Rect( 
+                    0,
+                    0,
+                    # initially it has to | might be invisible or "under" health_Box
+                    max_Width,
+                    8
+                )
+                self.damage_Box.center = self.background_Border_Box.center
+                self.health_Box = Rect( 
+                    0,
+                    0,
+                    max_Width,
+                    8
+                )
+                self.health_Box.center = self.background_Border_Box.center
+            
+            def draw( 
+                self, 
+                screen = screen,
+                display = pygame.display
+            ):
+                screen.fill( color = Color("black"), rect = self.background_Border_Box )
+                #screen.fill( color = Color("red"), rect = self.damage_Box )
+                screen.fill( color = Color("green"), rect = self.health_Box )
+                display.update( self.background_Border_Box )
+        
+            def take_Hit( 
+                self, 
+                damage,
+                screen = screen,
+                display = pygame.display
+            ):
+                """shrink health_Box to the left ( from the right )"""
+                self.health_Left = max( 0, self.health_Left - damage )
+                
+                if self.health_Left > 0:
+                    
+                    screen.fill( color = Color("red"), rect = self.damage_Box )
+                    self.health_Box.right = self.health_Box.left + self.health_Left
+                    screen.fill( color = Color("green"), rect = self.health_Box )
+                    display.update( self.background_Border_Box )
+        
+        
+        health_Bar = Health_Bar()
+        health_Bar.draw()
+        health_Bar.take_Hit( 50 )
         # 7 - update the screen
         pygame.display.flip()
+        
         # 8 - loop through the events
         for event in pygame.event.get():
             # check if the event is the X button 
