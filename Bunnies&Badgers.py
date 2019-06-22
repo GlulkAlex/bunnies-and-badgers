@@ -121,23 +121,28 @@ def show_difficulty_options(
         #screen, 
         #( 0, 255, 255 ), 
         #( ( textx - 5, texty - 5 ), ( textx_size + 10, texty_size + 10 ) ) )
-    options_Box = screen.fill( 
+    scale_Factor = 0.8
+    options_Box = Rect( 
+        #left = 
+        #width // 10, 
+        #50,
+        0,
+        #top = 
+        #height // 10, 
+        #40,
+        0,
+        #width = 
+        int( width * scale_Factor ), 
+        #400,
+        #height = 
+        int( height * scale_Factor ) 
+        #300
+    )
+    options_Box.center = ( width // 2, height // 2 )
+    screen.fill( 
         color = Color("red"), 
         # TypeError: Argument must be rect style object
-        rect = Rect( 
-            #left = 
-            #width // 10, 
-            50,
-            #top = 
-            #height // 10, 
-            40,
-            #width = 
-            #int( width * 0.8 ), 
-            400,
-            #height = 
-            #int( height * 0.8 ) 
-            300
-        ) )
+        rect = options_Box )
     
     #for option in ( 'easy', 'medium', 'hard' ):
     #    pass
@@ -199,19 +204,20 @@ def show_difficulty_options(
     def mark_Option( 
         option_Box, 
         selection_Border = selection_Border,
-        selection_Border_Buffer = selection_Border_Buffer
+        selection_Border_Buffer = selection_Border_Buffer,
+        border_Width = 10
     ):
         """ helper """
         old_Border = selection_Border.copy()
         selection_Border_Buffer.center = old_Border.center
         #?
-        pygame.draw.rect( screen, Color("red"), old_Border, 10 )
+        pygame.draw.rect( screen, Color("red"), old_Border, border_Width )
         pygame.display.update( selection_Border_Buffer )
         #?pygame.draw.rect( screen, Color("red"), selection_Border_Buffer, 5 )
-        pygame.draw.rect( screen, Color("green"), old_Border, 10 )
+        pygame.draw.rect( screen, Color("green"), old_Border, border_Width )
         selection_Border.center = option_Box.center 
         selection_Border_Buffer.center = option_Box.center
-        pygame.draw.rect( screen, Color("gray"), selection_Border, 10 )
+        pygame.draw.rect( screen, Color("gray"), selection_Border, border_Width )
         # return 
         #pygame.display.update( old_Border )
         #pygame.display.update( option_Box )
